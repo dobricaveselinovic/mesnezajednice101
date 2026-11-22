@@ -8,22 +8,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            paper: '#FAF8F5',
+            paper: '#F9FAF7',
             surface: '#FFFFFF',
-            ink: '#1C1917',
-            muted: '#57534E',
-            petrol: {
-              900: '#132A3A',
-              800: '#1B3B52',
-              700: '#244D6B',
-              100: '#E6EEF4',
-              50: '#F3F7FA'
+            ink: '#1A241E',
+            muted: '#526058',
+            forest: {
+              900: '#163A2C',
+              800: '#1D4938',
+              700: '#235842',
+              100: '#EBF3EF',
+              50: '#F4F8F6'
             },
             terracotta: {
               600: '#B54B25',
@@ -42,17 +44,80 @@
   </script>
   <style>
     body {
-      background-color: #FAF8F5;
-      color: #1C1917;
+      background-color: #F9FAF7;
+      color: #1A241E;
     }
     .toc-link.active {
       color: #C85A32;
       border-left-color: #C85A32;
       font-weight: 600;
     }
+    /* Taktilna pozadina oglasne table (pluta / zidna tabla bez slika tabli) */
+    .notice-board {
+      background-color: #EFECE4;
+      background-image:
+        radial-gradient(rgba(22, 58, 44, 0.08) 1px, transparent 0),
+        radial-gradient(rgba(200, 90, 50, 0.07) 1px, transparent 0),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(226, 220, 206, 0.45) 100%);
+      background-size: 20px 20px, 28px 28px, 100% 100%;
+      background-position: 0 0, 10px 14px, 0 0;
+      border: 3px solid #163A2C;
+      box-shadow: 0 12px 30px -12px rgba(22, 58, 44, 0.18), inset 0 0 0 4px #D8D1C2;
+    }
+    .pinned-sheet {
+      position: relative;
+      box-shadow: 0 4px 14px rgba(22, 58, 44, 0.09);
+    }
+    .pinned-sheet::before,
+    .pinned-sheet::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      width: 11px;
+      height: 11px;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 35% 35%, #E07A54, #B54B25 70%, #7C2F14 100%);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+      z-index: 10;
+    }
+    .pinned-sheet::before {
+      left: 12px;
+    }
+    .pinned-sheet::after {
+      right: 12px;
+    }
+    .tape-strip {
+      background: rgba(246, 239, 214, 0.85);
+      border-left: 1px dashed rgba(22, 58, 44, 0.25);
+      border-right: 1px dashed rgba(22, 58, 44, 0.25);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    /* Prilagođavanje Leaflet mape dizajnu sajta */
+    #bg-mz-map {
+      height: 440px;
+      width: 100%;
+      z-index: 10;
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px !important;
+      border: 1px solid #EBF3EF;
+      box-shadow: 0 10px 25px -5px rgba(22, 58, 44, 0.18) !important;
+      font-family: 'Inter', system-ui, sans-serif !important;
+    }
+    .leaflet-popup-content {
+      margin: 12px 14px !important;
+    }
     @media print {
       body * {
         visibility: hidden;
+      }
+      .notice-board, .pinned-sheet {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .pinned-sheet::before, .pinned-sheet::after {
+        display: none !important;
       }
       #print-area, #print-area * {
         visibility: visible;
@@ -69,22 +134,25 @@
     }
   </style>
 </head>
-<body class="antialiased selection:bg-terracotta-100 selection:text-petrol-900">
+<body class="antialiased selection:bg-terracotta-100 selection:text-forest-900">
 
   <!-- Mobile Top Header -->
-  <header class="lg:hidden sticky top-0 z-40 bg-paper/95 backdrop-blur border-b border-stone-200 px-4 py-3 flex items-center justify-between">
-    <a href="#uvod" class="font-serif font-bold text-xl text-petrol-900 tracking-tight">Mesne zajednice 101</a>
-    <button id="mobile-menu-btn" class="text-sm font-medium text-petrol-900 px-3 py-1.5 rounded-lg border border-stone-300 bg-white">
+  <header class="lg:hidden sticky top-0 z-40 bg-paper/95 backdrop-blur border-b border-forest-100 px-4 py-3 flex items-center justify-between">
+    <a href="#uvod" class="font-serif font-bold text-xl text-forest-900 tracking-tight flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-terracotta-500"></span>
+      <span>Mesne zajednice 101</span>
+    </a>
+    <button id="mobile-menu-btn" class="text-sm font-medium text-forest-900 px-3 py-1.5 rounded-lg border border-forest-100 bg-white shadow-2xs">
       Sadržaj
     </button>
   </header>
 
   <!-- Mobile Drawer -->
   <div id="mobile-drawer" class="hidden lg:hidden fixed inset-0 z-50 bg-ink/40 backdrop-blur-xs">
-    <div class="bg-paper w-72 h-full p-6 shadow-xl border-r border-stone-200 flex flex-col justify-between">
+    <div class="bg-paper w-72 h-full p-6 shadow-xl border-r border-forest-100 flex flex-col justify-between">
       <div>
         <div class="flex items-center justify-between mb-6">
-          <span class="font-serif font-bold text-lg text-petrol-900">Sadržaj vodiča</span>
+          <span class="font-serif font-bold text-lg text-forest-900">Sadržaj vodiča</span>
           <button id="close-drawer-btn" class="text-stone-500 hover:text-ink text-xl leading-none">&times;</button>
         </div>
         <nav class="space-y-3 text-sm">
@@ -94,10 +162,11 @@
           <a href="#poglavlje-3" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">III. Primeri dobre prakse</a>
           <a href="#poglavlje-4" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">IV. Pripremni spisak i šabloni</a>
           <a href="#preporuke" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Preporuke za oživljavanje</a>
+          <a href="#dodatak-bg" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Dodatak: Beogradske MZ</a>
           <a href="#impresum" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Kontakt / Impresum</a>
         </nav>
       </div>
-      <div class="text-xs text-stone-500 border-t border-stone-200 pt-4">
+      <div class="text-xs text-muted border-t border-forest-100 pt-4">
         Digitalna publikacija i priručnik za mesnu samoupravu.
       </div>
     </div>
@@ -111,44 +180,50 @@
       <aside class="hidden lg:block lg:col-span-3">
         <div class="sticky top-10 space-y-8">
           <div>
-            <a href="#uvod" class="font-serif font-bold text-2xl text-petrol-900 tracking-tight block">
+            <a href="#uvod" class="font-serif font-bold text-2xl text-forest-900 tracking-tight block">
               Mesne zajednice 101
             </a>
-            <div class="h-1 w-12 bg-terracotta-500 mt-3 rounded-full"></div>
+            <div class="flex items-center gap-1.5 mt-3">
+              <div class="h-1 w-10 bg-forest-700 rounded-full"></div>
+              <div class="h-1 w-4 bg-terracotta-500 rounded-full"></div>
+            </div>
           </div>
 
           <nav aria-label="Sadržaj" class="space-y-1 text-sm">
-            <a href="#uvod" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#uvod" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               Uvod
             </a>
-            <a href="#poglavlje-1" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#poglavlje-1" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               I. Šta je mesna zajednica?
             </a>
-            <a href="#poglavlje-2" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#poglavlje-2" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               II. Alati i pravila za pokretače
             </a>
-            <a href="#poglavlje-3" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#poglavlje-3" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               III. Primeri dobre prakse
             </a>
-            <a href="#poglavlje-4" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#poglavlje-4" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               IV. Spisak i šabloni dopisa
             </a>
-            <a href="#preporuke" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#preporuke" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               Preporuke za oživljavanje
             </a>
-            <a href="#impresum" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+            <a href="#dodatak-bg" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
+              Dodatak: Beogradske MZ
+            </a>
+            <a href="#impresum" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
               Kontakt / Impresum
             </a>
           </nav>
 
           <!-- Checklist Progress Box -->
-          <div class="bg-white border border-stone-200 rounded-xl p-4 shadow-2xs">
-            <div class="flex items-center justify-between text-xs font-medium text-stone-600 mb-2">
+          <div class="bg-white border border-forest-100 rounded-xl p-4 shadow-2xs">
+            <div class="flex items-center justify-between text-xs font-medium text-muted mb-2">
               <span>Spremnost za akciju</span>
-              <span id="sidebar-progress-text" class="text-petrol-900 font-semibold">0 / 6</span>
+              <span id="sidebar-progress-text" class="text-forest-900 font-semibold">0 / 6</span>
             </div>
-            <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-              <div id="sidebar-progress-bar" class="bg-terracotta-500 h-full transition-all duration-300" style="width: 0%"></div>
+            <div class="w-full bg-forest-50 h-2 rounded-full overflow-hidden">
+              <div id="sidebar-progress-bar" class="bg-forest-700 h-full transition-all duration-300" style="width: 0%"></div>
             </div>
             <a href="#poglavlje-4" class="mt-3 inline-block text-xs font-medium text-terracotta-600 hover:underline">
               Otvori pripremni spisak &rarr;
@@ -162,7 +237,7 @@
 
         <!-- HERO / UVOD -->
         <section id="uvod" class="scroll-mt-16">
-          <h1 class="font-serif font-bold text-4xl sm:text-5xl lg:text-6xl text-petrol-900 tracking-tight leading-tight">
+          <h1 class="font-serif font-bold text-4xl sm:text-5xl lg:text-6xl text-forest-900 tracking-tight leading-tight">
             Mesne zajednice 101
           </h1>
 
@@ -171,49 +246,85 @@
           </p>
 
           <!-- Kardelj Quote -->
-          <blockquote class="mt-8 bg-white border-l-4 border-terracotta-500 rounded-r-xl p-6 sm:p-8 shadow-2xs border-y border-r border-stone-200">
-            <p class="font-serif italic text-lg sm:text-xl text-petrol-900 leading-relaxed">
-              „Mesna zajednica nije pre svega institucija, organizacioni mehanizam, teritorijalna jedinica. Ona je zajednica ljudi i od toga treba uvek polaziti. Zato ona ne trpi shemu ni u pogledu teritorijalnog određenja, ni metoda funkcionisanja, ni organizacionih formi, niti planiranja. Ako je to tako, onda je svaka zajednička ljudska aktivnost u naselju, a ne samo politička u užem smislu reči, koja zbližava ljude, razvija solidarnost i samopomoć, svest o zajedništvu (kulturna, sportska, humanitarna, socijalna, zabavna) od značaja za ostvarivanje mesne zajednice i treba je podizati.“
-            </p>
-            <footer class="mt-4 text-sm font-medium text-stone-600">
-              — Edvard Kardelj, <cite class="not-italic font-semibold text-petrol-800">„O komuni“</cite>
-            </footer>
+          <blockquote class="mt-8 bg-white border-l-4 border-terracotta-500 rounded-r-xl p-6 sm:p-8 shadow-2xs border-y border-r border-forest-100">
+            <div class="flex flex-col sm:flex-row items-start gap-6">
+              <!-- Stilizovana modernistička ilustracija korice knjige Edvard Kardelj - O KOMUNI -->
+              <div class="shrink-0 mx-auto sm:mx-0">
+                <svg class="w-28 sm:w-32 h-auto rounded-lg shadow-md border border-forest-100" viewBox="0 0 220 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stilizovana korica knjige Edvard Kardelj - O komuni">
+                  <defs>
+                    <linearGradient id="kardeljColLeft" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#F9FAF7" />
+                      <stop offset="48%" stop-color="#8FB5A3" />
+                      <stop offset="100%" stop-color="#163A2C" />
+                    </linearGradient>
+                    <linearGradient id="kardeljColRight" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#D97A54" />
+                      <stop offset="52%" stop-color="#8FB5A3" />
+                      <stop offset="100%" stop-color="#163A2C" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Krem okvir korice -->
+                  <rect width="220" height="310" fill="#F4F1E8" />
+                  <!-- Terakota pozadina korice -->
+                  <rect x="10" y="10" width="200" height="290" fill="#C85A32" />
+                  <!-- Tipografija na vrhu -->
+                  <text x="22" y="42" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="20.5" letter-spacing="-0.5" fill="#163A2C">Edvard Kardelj</text>
+                  <text x="21" y="74" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="27.5" letter-spacing="-0.6" fill="#F9FAF7">O KOMUNI</text>
+                  <!-- Leva geometrijska forma (stub / krilo) -->
+                  <polygon points="10,96 84,162 84,282 72,300 72,168 10,113" fill="#F4F1E8" />
+                  <polygon points="10,113 72,168 72,300 10,300" fill="url(#kardeljColLeft)" />
+                  <polygon points="10,218 72,248 72,300 10,300" fill="#163A2C" />
+                  <!-- Desna geometrijska forma (stub / prolaz) -->
+                  <polygon points="114,112 156,112 174,126 174,264 210,300 114,300" fill="url(#kardeljColRight)" />
+                  <polygon points="114,220 156,220 156,246 210,300 114,300" fill="#163A2C" />
+                </svg>
+              </div>
+
+              <div class="flex-1">
+                <p class="font-serif italic text-lg sm:text-xl text-forest-900 leading-relaxed">
+                  „Mesna zajednica nije pre svega institucija, organizacioni mehanizam, teritorijalna jedinica. Ona je zajednica ljudi i od toga treba uvek polaziti. Zato ona ne trpi shemu ni u pogledu teritorijalnog određenja, ni metoda funkcionisanja, ni organizacionih formi, niti planiranja. Ako je to tako, onda je svaka zajednička ljudska aktivnost u naselju, a ne samo politička u uzem smislu reči, koja zbližava ljude, razvija solidarnost i samopomoć, svest o zajedništvu (kulturna, sportska, humanitarna, socijalna, zabavna) od značaja za ostvarivanje mesne zajednice i treba je podizati.“
+                </p>
+                <footer class="mt-4 text-sm font-medium text-muted">
+                  — Edvard Kardelj, <cite class="not-italic font-semibold text-forest-800">„O komuni“</cite>
+                </footer>
+              </div>
+            </div>
           </blockquote>
         </section>
 
-        <hr class="border-stone-200" />
+        <hr class="border-forest-100" />
 
         <!-- POGLAVLJE I -->
         <section id="poglavlje-1" class="scroll-mt-16 space-y-8">
           <div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje I</span>
-            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
               Šta je mesna zajednica: Mesto ili zajednica?
             </h2>
           </div>
 
           <div class="space-y-4 text-stone-700 leading-relaxed text-base sm:text-lg">
             <p>
-              U svakodnevnom govoru pod mesnom zajednicom najčešće podrazumevamo fizički prostor — zgradu ili kancelariju u kraju sa oglasnom tablom. Međutim, suština ovog instituta leži u <strong class="text-petrol-900">zajednici ljudi</strong> koji dele isti prostor i svakodnevne životne potrebe.
+              U svakodnevnom govoru pod mesnom zajednicom najčešće podrazumevamo fizički prostor — zgradu ili kancelariju u kraju sa oglasnom tablom. Međutim, suština ovog instituta leži u <strong class="text-forest-900">zajednici ljudi</strong> koji dele isti prostor i svakodnevne životne potrebe.
             </p>
             <p>
-              Mesna zajednica <strong class="text-petrol-900">nije organ vlasti i nema izvršnu moć</strong> — ona ne izdaje građevinske dozvole, ne piše kazne i ne raspolaže komunalnim preduzećima. Njena snaga je <strong class="text-petrol-900">legitimaciona moć</strong>: ona je zakonski priznata poluga kroz koju glas komšiluka postaje zvaničan institucionalni zahtev na koji opština ili grad moraju da odgovore.
+              Mesna zajednica <strong class="text-forest-900">nije organ vlasti i nema izvršnu moć</strong> — ona ne izdaje građevinske dozvole, ne piše kazne i ne raspolaže komunalnim preduzećima. Njena snaga je <strong class="text-forest-900">legitimaciona moć</strong>: ona je zakonski priznata poluga kroz koju glas komšiluka postaje zvaničan institucionalni zahtev na koji opština ili grad moraju da odgovore.
             </p>
           </div>
 
           <!-- Core Theoretical Pillars -->
           <div class="grid sm:grid-cols-2 gap-5">
-            <div class="bg-white border border-stone-200 rounded-xl p-6 shadow-2xs">
-              <div class="text-xs font-bold uppercase tracking-wider text-petrol-700 mb-2">Načelo odlučivanja</div>
-              <h3 class="font-serif font-bold text-xl text-petrol-900 mb-2">Princip supsidijarnosti</h3>
+            <div class="bg-white border border-forest-100 rounded-xl p-6 shadow-2xs">
+              <div class="text-xs font-bold uppercase tracking-wider text-forest-700 mb-2">Načelo odlučivanja</div>
+              <h3 class="font-serif font-bold text-xl text-forest-900 mb-2">Princip supsidijarnosti</h3>
               <p class="text-sm text-stone-600 leading-relaxed">
                 Temeljni princip lokalne demokratije koji nalaže da se odlučivanje o zajedničkim pitanjima uvek prenese na najniži mogući nivo društvene organizacije — tamo gde ljudi neposredno žive i osećaju posledice tih odluka.
               </p>
             </div>
 
-            <div class="bg-white border border-stone-200 rounded-xl p-6 shadow-2xs">
+            <div class="bg-white border border-forest-100 rounded-xl p-6 shadow-2xs">
               <div class="text-xs font-bold uppercase tracking-wider text-terracotta-600 mb-2">Novi okvir saradnje</div>
-              <h3 class="font-serif font-bold text-xl text-petrol-900 mb-2">Zajednička dobra (Commons)</h3>
+              <h3 class="font-serif font-bold text-xl text-forest-900 mb-2">Zajednička dobra (Commons)</h3>
               <p class="text-sm text-stone-600 leading-relaxed">
                 Koncept „partnerske države“ i zajedničkih dobara traži rešenja u trouglu država–tržište–građani kroz udruživanje civilnog sektora i komšija na najnižem nivou, gde moć ostaje na svom izvoru umesto da se trajno delegira.
               </p>
@@ -221,10 +332,10 @@
           </div>
 
           <!-- Interactive 4 Models of Neighbourhood Governance (Lowndes & Sullivan) -->
-          <div class="bg-petrol-50 border border-petrol-100 rounded-2xl p-6 sm:p-8">
+          <div class="bg-forest-50 border border-forest-100 rounded-2xl p-6 sm:p-8">
             <div class="mb-5">
-              <span class="text-xs font-semibold uppercase tracking-wider text-petrol-700">Tipologija lokalnog upravljanja</span>
-              <h3 class="font-serif font-bold text-2xl text-petrol-900 mt-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-forest-700">Tipologija lokalnog upravljanja</span>
+              <h3 class="font-serif font-bold text-2xl text-forest-900 mt-1">
                 Četiri modela upravljanja komšilukom
               </h3>
               <p class="text-sm text-stone-600 mt-1">
@@ -233,33 +344,33 @@
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6" id="model-tabs">
-              <button data-model="0" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-petrol-900 text-white shadow-2xs">
+              <button data-model="0" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-forest-900 text-white shadow-2xs cursor-pointer">
                 1. Osnaživanje zajednice
               </button>
-              <button data-model="1" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+              <button data-model="1" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-forest-900 border border-forest-100 hover:bg-forest-50 cursor-pointer">
                 2. Partnerstvo u lokalu
               </button>
-              <button data-model="2" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+              <button data-model="2" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-forest-900 border border-forest-100 hover:bg-forest-50 cursor-pointer">
                 3. Vlast u zajednici
               </button>
-              <button data-model="3" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+              <button data-model="3" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-forest-900 border border-forest-100 hover:bg-forest-50 cursor-pointer">
                 4. Tržišno upravljanje
               </button>
             </div>
 
-            <div id="model-display" class="bg-white rounded-xl p-5 sm:p-6 border border-stone-200 grid sm:grid-cols-2 gap-4">
+            <div id="model-display" class="bg-white rounded-xl p-5 sm:p-6 border border-forest-100 grid sm:grid-cols-2 gap-4">
               <!-- Populated by JS -->
             </div>
           </div>
         </section>
 
-        <hr class="border-stone-200" />
+        <hr class="border-forest-100" />
 
         <!-- POGLAVLJE II -->
         <section id="poglavlje-2" class="scroll-mt-16 space-y-8">
           <div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje II</span>
-            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
               Alati i pravila za pokretače u komšiluku
             </h2>
             <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
@@ -268,17 +379,17 @@
           </div>
 
           <!-- Beograd vs Srbija Switcher -->
-          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-stone-200">
+          <div class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-forest-100">
               <div>
-                <h3 class="font-serif font-bold text-2xl text-petrol-900">Gde pokrećeš inicijativu?</h3>
+                <h3 class="font-serif font-bold text-2xl text-forest-900">Gde pokrećeš inicijativu?</h3>
                 <p class="text-sm text-stone-600 mt-1">Pravila izbora Saveta MZ razlikuju se u Beogradu u odnosu na ostatak Srbije.</p>
               </div>
-              <div class="inline-flex rounded-xl bg-stone-100 p-1 self-start">
-                <button id="btn-srbija" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white">
+              <div class="inline-flex rounded-xl bg-forest-50 p-1 self-start border border-forest-100">
+                <button id="btn-srbija" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white cursor-pointer">
                   Ostatak Srbije
                 </button>
-                <button id="btn-beograd" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900">
+                <button id="btn-beograd" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900 cursor-pointer">
                   Grad Beograd
                 </button>
               </div>
@@ -292,28 +403,28 @@
           <!-- Preventive Power / Urbanism -->
           <div class="bg-terracotta-50 border border-terracotta-100 rounded-2xl p-6 sm:p-8">
             <div class="text-xs font-bold uppercase tracking-wider text-terracotta-600 mb-2">Odbrana javnog prostora</div>
-            <h3 class="font-serif font-bold text-2xl text-petrol-900 mb-3">
+            <h3 class="font-serif font-bold text-2xl text-forest-900 mb-3">
               „Najvažnije što je MZ uradila je ono što je sprečila da se uradi“
             </h3>
             <p class="text-stone-700 text-sm sm:text-base leading-relaxed mb-4">
-              Mesne zajednice imaju ključnu ulogu u zaštiti parkova, igrališta i javnih površina od štetnih urbanističkih izmena. Dok se danas javni uvidi često svode na formalnost u centralnim upravnim zgradama, iskustvo izrade „Zlatnog plana“ (GUP Beograda 1972. godine) pokazuje kako izgleda stvarna participacija: tada je javna rasprava sprovedena u <strong class="text-petrol-900">preko 200 mesnih zajednica</strong>, gde su građani direktno davali primedbe i menjali planove za svoj kraj.
+              Mesne zajednice imaju ključnu ulogu u zaštiti parkova, igrališta i javnih površina od štetnih urbanističkih izmena. Dok se danas javni uvidi često svode na formalnost u centralnim upravnim zgradama, iskustvo izrade „Zlatnog plana“ (GUP Beograda 1972. godine) pokazuje kako izgleda stvarna participacija: tada je javna rasprava sprovedena u <strong class="text-forest-900">preko 200 mesnih zajednica</strong>, gde su građani direktno davali primedbe i menjali planove za svoj kraj.
             </p>
-            <div class="bg-white/80 rounded-xl p-4 border border-terracotta-100 text-sm text-stone-700">
-              <strong class="text-petrol-900">Kako to koristiti danas:</strong> Kada se najavi izmena plana detaljne regulacije ili gradnja na zelenoj površini, građani mogu preko Zbora građana ili zahteva Savetu MZ zatražiti organizovanje javne prezentacije plana direktno u prostorijama svoje mesne zajednice.
+            <div class="bg-white/90 rounded-xl p-4 border border-terracotta-100 text-sm text-stone-700">
+              <strong class="text-forest-900">Kako to koristiti danas:</strong> Kada se najavi izmena plana detaljne regulacije ili gradnja na zelenoj površini, građani mogu preko Zbora građana ili zahteva Savetu MZ zatražiti organizovanje javne prezentacije plana direktno u prostorijama svoje mesne zajednice.
             </div>
           </div>
 
           <!-- Interactive Signature Calculator & 4 Tools -->
-          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
+          <div class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
             <div>
-              <h3 class="font-serif font-bold text-2xl text-petrol-900">Kalkulator potpisa i zakonski pragovi</h3>
+              <h3 class="font-serif font-bold text-2xl text-forest-900">Kalkulator potpisa i zakonski pragovi</h3>
               <p class="text-sm text-stone-600 mt-1">
                 Unesi približan broj upisanih birača u tvojoj mesnoj zajednici (ili opštini) da vidiš koliko potpisa je potrebno za pokretanje pojedinih mehanizama:
               </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-paper p-4 rounded-xl border border-stone-200">
-              <label for="voters-input" class="text-sm font-semibold text-petrol-900">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-forest-50 p-4 rounded-xl border border-forest-100">
+              <label for="voters-input" class="text-sm font-semibold text-forest-900">
                 Broj birača na teritoriji MZ / opštine:
               </label>
               <input
@@ -322,70 +433,70 @@
                 value="5000"
                 min="50"
                 step="100"
-                class="w-full sm:w-44 px-3.5 py-2 rounded-lg border border-stone-300 bg-white text-petrol-900 font-bold text-base focus:outline-hidden focus:border-terracotta-500"
+                class="w-full sm:w-44 px-3.5 py-2 rounded-lg border border-stone-300 bg-white text-forest-900 font-bold text-base focus:outline-hidden focus:border-terracotta-500"
               />
-              <span class="text-xs text-stone-500">Proveri tačan prag u Statutu svoje opštine/MZ.</span>
+              <span class="text-xs text-muted">Proveri tačan prag u Statutu svoje opštine/MZ.</span>
             </div>
 
             <div class="grid sm:grid-cols-2 gap-4">
-              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+              <div class="border border-forest-100 rounded-xl p-5 bg-paper">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">1. Sednica Saveta MZ</span>
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Fiksni broj</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-forest-700">1. Sednica Saveta MZ</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-900">Fiksni broj</span>
                 </div>
-                <div class="font-serif font-bold text-3xl text-petrol-900 my-1">15 građana</div>
+                <div class="font-serif font-bold text-3xl text-forest-900 my-1">15 građana</div>
                 <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
                   Predsednik Saveta je dužan da sazove sednicu Saveta MZ na pisani zahtev najmanje 15 građana sa teritorije te mesne zajednice.
                 </p>
               </div>
 
-              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+              <div class="border border-forest-100 rounded-xl p-5 bg-paper">
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-xs font-bold uppercase tracking-wider text-terracotta-600">2. Zbor građana</span>
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-terracotta-100 text-terracotta-600">Rok 60 dana</span>
                 </div>
-                <div id="calc-zbor" class="font-serif font-bold text-3xl text-petrol-900 my-1">~500 birača (10%)</div>
+                <div id="calc-zbor" class="font-serif font-bold text-3xl text-forest-900 my-1">~500 birača (10%)</div>
                 <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
                   Kvorum i broj potpisa uređuje statut (najčešće do 10%). Nadležni organi moraju da razmotre odluke zbora i odgovore u roku od <strong>60 dana</strong>.
                 </p>
               </div>
 
-              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+              <div class="border border-forest-100 rounded-xl p-5 bg-paper">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">3. Građanska inicijativa</span>
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Rok 60 dana</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-forest-700">3. Građanska inicijativa</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-900">Rok 60 dana</span>
                 </div>
-                <div id="calc-inicijativa" class="font-serif font-bold text-3xl text-petrol-900 my-1">250 birača (5%)</div>
+                <div id="calc-inicijativa" class="font-serif font-bold text-3xl text-forest-900 my-1">250 birača (5%)</div>
                 <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
                   Za predlaganje donošenja ili izmene opštinskih odluka potrebno je 5% potpisa birača. Skupština mora da održi raspravu i odgovori u roku od <strong>60 dana</strong>.
                 </p>
               </div>
 
-              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+              <div class="border border-forest-100 rounded-xl p-5 bg-paper">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">4. Referendum / Osnivanje MZ</span>
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Obavezujuće</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-forest-700">4. Referendum / Osnivanje MZ</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-900">Obavezujuće</span>
                 </div>
-                <div id="calc-referendum" class="font-serif font-bold text-3xl text-petrol-900 my-1">500 birača (10%)</div>
+                <div id="calc-referendum" class="font-serif font-bold text-3xl text-forest-900 my-1">500 birača (10%)</div>
                 <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
                   Najmanje 10% birača potrebno je za predlog osnivanja/ukidanja MZ ili raspisivanje referenduma (uključujući uvođenje samodoprinosa u novcu, radu ili robi).
                 </p>
               </div>
             </div>
 
-            <div class="bg-petrol-50 border border-petrol-100 rounded-xl p-4 text-xs sm:text-sm text-petrol-900">
+            <div class="bg-forest-50 border border-forest-100 rounded-xl p-4 text-xs sm:text-sm text-forest-900">
               <strong>Šta ako Savet MZ odbije da sazove Zbor građana?</strong> Ukoliko Savet ignoriše uredan zahtev građana, zbor je dužan da sazove predsednik skupštine opštine ili grada, a građani mogu pokrenuti i postupak za smenu pasivnog Saveta MZ.
             </div>
           </div>
         </section>
 
-        <hr class="border-stone-200" />
+        <hr class="border-forest-100" />
 
         <!-- POGLAVLJE III -->
         <section id="poglavlje-3" class="scroll-mt-16 space-y-8">
           <div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje III</span>
-            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
               Primeri dobre prakse i oživljavanje zajednice
             </h2>
             <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
@@ -394,14 +505,14 @@
           </div>
 
           <!-- Case Study 1: MZ Studentski grad -->
-          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+          <article class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-terracotta-100 text-terracotta-600">
                 Studija slučaja 1
               </span>
-              <span class="text-xs font-medium text-stone-500">Novi Beograd • Javni prostor</span>
+              <span class="text-xs font-medium text-muted">Novi Beograd • Javni prostor</span>
             </div>
-            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+            <h3 class="font-serif font-bold text-2xl text-forest-900">
               MZ „Studentski grad“: Otvaranje sale za komšiluk i kulturu
             </h3>
             <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
@@ -410,20 +521,20 @@
             <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
               U ovom prostoru realizovano je <strong>preko 100 besplatnih programa</strong> (predstava, radionica, tribina, izložbi), a same organizacije su uložile sredstva u obnovu prostora. Nažalost, iako je ovakav model javno-civilnog partnerstva pokazao ogroman potencijal, <strong>prostor je nakon nekoliko godina zatvoren</strong> jer nadležni nisu produžili protokol o saradnji.
             </p>
-            <div class="bg-paper border border-stone-200 rounded-xl p-4 text-xs sm:text-sm text-stone-700">
-              <strong class="text-petrol-900">Važno pravo građana:</strong> Prostorije MZ nisu stranačke kancelarije. Prema lokalnim pravilnicima (poput onog u Novom Sadu), Savet MZ može bez naknade ustupiti salu <strong>stambenim zajednicama</strong> za sastanke stanara, Crvenom krstu, udruženjima penzionera, dobrovoljnim davaocima krvi, kao i udruženjima građana za nekomercijalne aktivnosti.
+            <div class="bg-forest-50 border border-forest-100 rounded-xl p-4 text-xs sm:text-sm text-stone-700">
+              <strong class="text-forest-900">Važno pravo građana:</strong> Prostorije MZ nisu stranačke kancelarije. Prema lokalnim pravilnicima (poput onog u Novom Sadu), Savet MZ može bez naknade ustupiti salu <strong>stambenim zajednicama</strong> za sastanke stanara, Crvenom krstu, udruženjima penzionera, dobrovoljnim davaocima krvi, kao i udruženjima građana za nekomercijalne aktivnosti.
             </div>
           </article>
 
           <!-- Case Study 2: MZ Liman -->
-          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+          <article class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-petrol-100 text-petrol-900">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-forest-100 text-forest-900">
                 Studija slučaja 2
               </span>
-              <span class="text-xs font-medium text-stone-500">Novi Sad • Neposredni izbori</span>
+              <span class="text-xs font-medium text-muted">Novi Sad • Neposredni izbori</span>
             </div>
-            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+            <h3 class="font-serif font-bold text-2xl text-forest-900">
               MZ „Liman“: Kako su nezavisne komšije pobedile na izborima
             </h3>
             <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
@@ -435,14 +546,14 @@
           </article>
 
           <!-- Case Study 3: Zborovi gradjana -->
-          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+          <article class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-terracotta-100 text-terracotta-600">
                 Studija slučaja 3
               </span>
-              <span class="text-xs font-medium text-stone-500">Cela Srbija • Neposredno učešće</span>
+              <span class="text-xs font-medium text-muted">Cela Srbija • Neposredno učešće</span>
             </div>
-            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+            <h3 class="font-serif font-bold text-2xl text-forest-900">
               Zborovi građana u akciji: Pozivanje Saveta MZ na polaganje računa
             </h3>
             <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
@@ -454,13 +565,23 @@
           </article>
         </section>
 
-        <hr class="border-stone-200" />
+        <hr class="border-forest-100" />
 
-        <!-- POGLAVLJE IV -->
-        <section id="poglavlje-4" class="scroll-mt-16 space-y-8">
-          <div>
+        <!-- POGLAVLJE IV (Oglasna tabla / pinboard okvir bez slika tabli) -->
+        <section id="poglavlje-4" class="scroll-mt-16 notice-board rounded-2xl p-5 sm:p-8 space-y-8 relative">
+          <!-- Zaglavlje oglasne table -->
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-forest-900 text-white px-4 py-2.5 rounded-xl border border-forest-800 shadow-2xs">
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+              <span class="w-2.5 h-2.5 rounded-full bg-terracotta-500 inline-block"></span>
+              <span>Oglasna tabla mesne zajednice • Uputstva i obrasci</span>
+            </div>
+            <span class="text-[11px] font-medium text-forest-100">Poglavlje IV</span>
+          </div>
+
+          <div class="bg-paper/95 border border-forest-100 rounded-xl p-5 sm:p-6 relative">
+            <div class="tape-strip w-20 h-4 mx-auto -mt-7 mb-3 rounded-xs"></div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje IV</span>
-            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
               Pripremni spisak i gotovi šabloni dopisa
             </h2>
             <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
@@ -469,10 +590,10 @@
           </div>
 
           <!-- Interactive Checklist -->
-          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs">
+          <div class="pinned-sheet bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 pt-8">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-serif font-bold text-2xl text-petrol-900">Pripremni spisak u 6 koraka</h3>
-              <button id="reset-checklist-btn" class="text-xs text-stone-500 hover:text-terracotta-600 underline">
+              <h3 class="font-serif font-bold text-2xl text-forest-900">Pripremni spisak u 6 koraka</h3>
+              <button id="reset-checklist-btn" class="text-xs text-muted hover:text-terracotta-600 underline cursor-pointer">
                 Poništi izbor
               </button>
             </div>
@@ -482,9 +603,9 @@
           </div>
 
           <!-- Document Templates Generator -->
-          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
+          <div class="pinned-sheet bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 pt-8 space-y-6">
             <div>
-              <h3 class="font-serif font-bold text-2xl text-petrol-900">Gotovi šabloni zvaničnih dopisa</h3>
+              <h3 class="font-serif font-bold text-2xl text-forest-900">Gotovi šabloni zvaničnih dopisa</h3>
               <p class="text-sm text-stone-600 mt-1">
                 Izaberi vrstu dopisa, popuni osnovne podatke i kopiraj tekst ili ga odštampaj u dva primerka (jedan ostaje pisarnici, drugi sa zavodnim pečatom zadržavaš ti).
               </p>
@@ -492,49 +613,49 @@
 
             <!-- Template Selector -->
             <div class="grid sm:grid-cols-2 gap-2.5" id="template-selector">
-              <button data-tpl="sednica" class="tpl-btn text-left p-3.5 rounded-xl border-2 border-petrol-900 bg-petrol-50 transition">
-                <div class="font-semibold text-sm text-petrol-900">1. Zahtev 15 građana za sednicu Saveta</div>
+              <button data-tpl="sednica" class="tpl-btn text-left p-3.5 rounded-xl border-2 border-forest-900 bg-forest-50 transition cursor-pointer">
+                <div class="font-semibold text-sm text-forest-900">1. Zahtev 15 građana za sednicu Saveta</div>
                 <div class="text-xs text-stone-600 mt-0.5">Stavljanje teme na dnevni red Saveta MZ</div>
               </button>
-              <button data-tpl="zbor" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
-                <div class="font-semibold text-sm text-petrol-900">2. Inicijativa za sazivanje Zbora građana</div>
+              <button data-tpl="zbor" class="tpl-btn text-left p-3.5 rounded-xl border border-forest-100 bg-white hover:bg-forest-50 transition cursor-pointer">
+                <div class="font-semibold text-sm text-forest-900">2. Inicijativa za sazivanje Zbora građana</div>
                 <div class="text-xs text-stone-600 mt-0.5">Poziv na odlučivanje uz zakonski rok od 60 dana</div>
               </button>
-              <button data-tpl="sala" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
-                <div class="font-semibold text-sm text-petrol-900">3. Zahtev za korišćenje sale MZ</div>
+              <button data-tpl="sala" class="tpl-btn text-left p-3.5 rounded-xl border border-forest-100 bg-white hover:bg-forest-50 transition cursor-pointer">
+                <div class="font-semibold text-sm text-forest-900">3. Zahtev za korišćenje sale MZ</div>
                 <div class="text-xs text-stone-600 mt-0.5">Za stambenu zajednicu, tribinu ili radionicu</div>
               </button>
-              <button data-tpl="uvid" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
-                <div class="font-semibold text-sm text-petrol-900">4. Zahtev za uvid u Statut i zapisnike</div>
+              <button data-tpl="uvid" class="tpl-btn text-left p-3.5 rounded-xl border border-forest-100 bg-white hover:bg-forest-50 transition cursor-pointer">
+                <div class="font-semibold text-sm text-forest-900">4. Zahtev za uvid u Statut i zapisnike</div>
                 <div class="text-xs text-stone-600 mt-0.5">Provera pravila rada, kvoruma i izveštaja</div>
               </button>
             </div>
 
             <!-- Quick Fill Inputs -->
-            <div class="grid sm:grid-cols-3 gap-3 bg-paper p-4 rounded-xl border border-stone-200">
+            <div class="grid sm:grid-cols-3 gap-3 bg-forest-50 p-4 rounded-xl border border-forest-100">
               <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">Naziv Mesne zajednice</label>
-                <input id="inp-mz" type="text" placeholder="npr. MZ Studentski grad" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+                <label class="block text-xs font-semibold text-forest-900 mb-1">Naziv Mesne zajednice</label>
+                <input id="inp-mz" type="text" placeholder="npr. MZ Studentski grad" class="w-full px-3 py-2 text-sm bg-white border border-forest-100 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">Opština / Grad</label>
-                <input id="inp-opstina" type="text" placeholder="npr. Novi Beograd" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+                <label class="block text-xs font-semibold text-forest-900 mb-1">Opština / Grad (i adresa MZ)</label>
+                <input id="inp-opstina" type="text" placeholder="npr. Novi Beograd (Narodnih heroja 30)" class="w-full px-3 py-2 text-sm bg-white border border-forest-100 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">Tema / Predmet inicijative</label>
-                <input id="inp-tema" type="text" placeholder="npr. Javna rasprava o planu parka" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+                <label class="block text-xs font-semibold text-forest-900 mb-1">Tema / Predmet inicijative</label>
+                <input id="inp-tema" type="text" placeholder="npr. Javna rasprava o planu parka" class="w-full px-3 py-2 text-sm bg-white border border-forest-100 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
               </div>
             </div>
 
             <!-- Document Preview -->
-            <div id="print-area" class="bg-white border border-stone-300 rounded-xl p-6 sm:p-8 font-serif text-sm sm:text-base text-ink leading-relaxed whitespace-pre-line shadow-inner"></div>
+            <div id="print-area" class="bg-paper border border-forest-100 rounded-xl p-6 sm:p-8 font-serif text-sm sm:text-base text-ink leading-relaxed whitespace-pre-line"></div>
 
             <!-- Actions -->
             <div class="flex flex-wrap items-center gap-3">
-              <button id="copy-doc-btn" class="px-5 py-2.5 rounded-xl bg-petrol-900 hover:bg-petrol-800 text-white text-sm font-semibold transition cursor-pointer">
+              <button id="copy-doc-btn" class="px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold transition cursor-pointer shadow-2xs">
                 Kopiraj tekst dopisa
               </button>
-              <button onclick="window.print()" class="px-5 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-petrol-900 text-sm font-semibold transition cursor-pointer">
+              <button onclick="window.print()" class="px-5 py-2.5 rounded-xl border border-forest-100 bg-white hover:bg-forest-50 text-forest-900 text-sm font-semibold transition cursor-pointer">
                 Odštampaj / Sačuvaj kao PDF
               </button>
               <span id="copy-feedback" class="text-xs font-semibold text-terracotta-600 hidden">
@@ -544,13 +665,13 @@
           </div>
         </section>
 
-        <hr class="border-stone-200" />
+        <hr class="border-forest-100" />
 
         <!-- ZAVRŠNE PREPORUKE -->
         <section id="preporuke" class="scroll-mt-16 space-y-6">
           <div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Završne preporuke</span>
-            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
               Tri stuba za trajno oživljavanje mesnih zajednica
             </h2>
             <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
@@ -559,31 +680,31 @@
           </div>
 
           <div class="grid md:grid-cols-3 gap-5">
-            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+            <div class="bg-forest-900 text-white rounded-2xl p-6 flex flex-col justify-between">
               <div>
                 <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">01</div>
                 <h3 class="font-serif font-bold text-xl mb-3">Informisanje i javnost rada</h3>
-                <p class="text-sm text-petrol-100 leading-relaxed">
+                <p class="text-sm text-forest-100 leading-relaxed">
                   Uspostavljanje javnog registra svih mesnih zajednica na sajtu opštine, redovno ažuriranje oglasnih tabli, objavljivanje zapisnika sa sednica i obavezna godišnja javna prezentacija programa rada i finansijskog izveštaja pred građanima.
                 </p>
               </div>
             </div>
 
-            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+            <div class="bg-forest-900 text-white rounded-2xl p-6 flex flex-col justify-between">
               <div>
                 <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">02</div>
                 <h3 class="font-serif font-bold text-xl mb-3">Obavezno konsultovanje</h3>
-                <p class="text-sm text-petrol-100 leading-relaxed">
+                <p class="text-sm text-forest-100 leading-relaxed">
                   Izmena lokalnih pravilnika tako da se svi urbanistički planovi, infrastrukturni projekti i nacrti opštinskih budžeta obavezno predstavljaju na javnim raspravama u mesnim zajednicama na čijoj se teritoriji sprovode.
                 </p>
               </div>
             </div>
 
-            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+            <div class="bg-forest-900 text-white rounded-2xl p-6 flex flex-col justify-between">
               <div>
                 <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">03</div>
                 <h3 class="font-serif font-bold text-xl mb-3">Lakše neposredno učešće</h3>
-                <p class="text-sm text-petrol-100 leading-relaxed">
+                <p class="text-sm text-forest-100 leading-relaxed">
                   Spuštanje zakonskog praga za pokretanje građanske inicijative na 3% do 5% birača, ukidanje birokratskih prepreka za nezavisne kandidate na izborima i jačanje finansijske autonomije i participativnog budžetiranja.
                 </p>
               </div>
@@ -591,12 +712,79 @@
           </div>
         </section>
 
+        <hr class="border-forest-100" />
+
+        <!-- DODATAK: SPISAK BEOGRADSKIH MESNIH ZAJEDNICA -->
+        <section id="dodatak-bg" class="scroll-mt-16 space-y-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Dodatak</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
+              Spisak i mapa beogradskih mesnih zajednica
+            </h2>
+            <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
+              Istraži beogradske mesne zajednice na interaktivnoj mapi ili ih pretraži po opštini i imenu. Klikom na marker na mapi ili na naziv MZ u spisku možeš direktno da popuniš generator zvaničnih dopisa u Poglavlju IV.
+            </p>
+          </div>
+
+          <!-- Pretraga i filteri po opštinama -->
+          <div class="bg-white border border-forest-100 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <div class="relative flex-1">
+                <input
+                  type="text"
+                  id="bg-mz-search"
+                  placeholder="Pretraži po imenu MZ, opštini ili ulici (npr. Studentski grad, Narodnih heroja, Cerak...)"
+                  class="w-full px-4 py-2.5 text-sm bg-paper border border-forest-100 rounded-xl text-forest-900 placeholder:text-muted focus:outline-hidden focus:border-terracotta-500"
+                />
+              </div>
+              <div id="bg-mz-count" class="text-xs font-semibold text-forest-900 bg-forest-50 border border-forest-100 px-3.5 py-2.5 rounded-xl flex items-center justify-center shrink-0">
+                Prikazano: 121 MZ
+              </div>
+            </div>
+
+            <div id="bg-mz-filters" class="flex flex-wrap gap-1.5">
+              <!-- Populated by JS -->
+            </div>
+
+            <p class="text-[11px] text-muted bg-paper border border-forest-100 rounded-lg px-3 py-2">
+              <strong class="text-forest-900">Napomena o adresama:</strong> Prikazane adrese sedišta mesnih zajednica prikupljene su iz javno dostupnih opštinskih imenika i evidencija. Pre slanja zvanične pošte preporučujemo da proveriš aktuelnu adresu i radno vreme pisarnice na zvaničnoj internet prezentaciji svoje gradske opštine.
+            </p>
+          </div>
+
+          <!-- Interaktivna mapa beogradskih MZ -->
+          <div class="bg-white border border-forest-100 rounded-2xl p-3 sm:p-4 shadow-2xs space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+              <div class="text-xs font-semibold text-forest-900">
+                OpenStreetMap prikaz mesnih zajednica po gradskim opštinama
+              </div>
+              <button
+                type="button"
+                id="reset-map-view-btn"
+                class="text-xs font-semibold text-terracotta-600 hover:underline cursor-pointer"
+              >
+                Prikaži ceo Beograd
+              </button>
+            </div>
+            <div class="rounded-xl overflow-hidden border border-forest-100">
+              <div id="bg-mz-map" aria-label="OpenStreetMap mapa beogradskih mesnih zajednica"></div>
+            </div>
+            <div id="bg-mz-legend" class="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-1 pt-1 text-[11px] text-muted">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Kartice po opštinama -->
+          <div id="bg-mz-list" class="grid sm:grid-cols-2 gap-4">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
         <!-- KONTAKT / IMPRESUM & IZVORI -->
-        <footer id="impresum" class="scroll-mt-16 pt-10 border-t border-stone-300 space-y-8 pb-12">
-          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <footer id="impresum" class="scroll-mt-16 pt-10 border-t border-forest-100 space-y-8 pb-12">
+          <div class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Kontakt / Impresum</span>
-              <h3 class="font-serif font-bold text-2xl text-petrol-900 mt-1">Dobrica Veselinović</h3>
+              <h3 class="font-serif font-bold text-2xl text-forest-900 mt-1">Dobrica Veselinović</h3>
               <p class="text-sm text-stone-600 mt-1">
                 Za pitanja, predloge, iskustva iz tvoje mesne zajednice i dopunu ovog vodiča:
               </p>
@@ -609,8 +797,8 @@
             </a>
           </div>
 
-          <div class="text-xs text-stone-500 space-y-2 leading-relaxed">
-            <div class="font-semibold text-stone-700">Korišćeni izvori i literatura:</div>
+          <div class="text-xs text-muted space-y-2 leading-relaxed">
+            <div class="font-semibold text-forest-900">Korišćeni izvori i literatura:</div>
             <ul class="list-disc pl-5 space-y-1">
               <li>Dobrica Veselinović, <em>„Mesna zajednica: mesto ili zajednica?“</em>, Mikro art / Ministarstvo prostora, Beograd.</li>
               <li>Ozren Lazić i Dragoljub Perković, <em>„Kratak vodič kroz mesne zajednice“</em>, Ministarstvo prostora / Institut za urbane politike, Beograd, 2023.</li>
@@ -703,23 +891,23 @@
       const m = governanceModels[idx];
       modelDisplay.innerHTML = `
         <div>
-          <div class="text-xs text-stone-500 uppercase font-semibold">Primarna svrha</div>
-          <div class="font-bold text-petrol-900 text-base mt-0.5">${m.purpose}</div>
+          <div class="text-xs text-muted uppercase font-semibold">Primarna svrha</div>
+          <div class="font-bold text-forest-900 text-base mt-0.5">${m.purpose}</div>
         </div>
         <div>
-          <div class="text-xs text-stone-500 uppercase font-semibold">Tip demokratije</div>
+          <div class="text-xs text-muted uppercase font-semibold">Tip demokratije</div>
           <div class="font-bold text-terracotta-600 text-base mt-0.5">${m.democracy}</div>
         </div>
         <div>
-          <div class="text-xs text-stone-500 uppercase font-semibold">Uloga građana</div>
+          <div class="text-xs text-muted uppercase font-semibold">Uloga građana</div>
           <div class="font-semibold text-ink text-sm mt-0.5">${m.citizenRole}</div>
         </div>
         <div>
-          <div class="text-xs text-stone-500 uppercase font-semibold">Institucionalni okvir</div>
+          <div class="text-xs text-muted uppercase font-semibold">Institucionalni okvir</div>
           <div class="font-semibold text-ink text-sm mt-0.5">${m.framework}</div>
         </div>
-        <div class="sm:col-span-2 pt-2 border-t border-stone-100">
-          <div class="text-xs text-stone-500 uppercase font-semibold">Glavni cilj</div>
+        <div class="sm:col-span-2 pt-2 border-t border-forest-100">
+          <div class="text-xs text-muted uppercase font-semibold">Glavni cilj</div>
           <div class="text-sm text-stone-700 mt-0.5">${m.goal}</div>
         </div>
       `;
@@ -728,9 +916,9 @@
     modelBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         modelBtns.forEach(b => {
-          b.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50';
+          b.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-forest-900 border border-forest-100 hover:bg-forest-50';
         });
-        btn.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-petrol-900 text-white shadow-2xs';
+        btn.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-forest-900 text-white shadow-2xs';
         renderModel(Number(btn.dataset.model));
       });
     });
@@ -744,16 +932,16 @@
     const jurisdictionData = {
       srbija: `
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="p-4 rounded-xl bg-petrol-50 border border-petrol-100">
-            <div class="text-xs font-bold uppercase text-petrol-700 mb-1">Zakon o lokalnoj samoupravi</div>
-            <div class="font-bold text-petrol-900 text-base mb-1">Neposredni izbori za Savet MZ</div>
+          <div class="p-4 rounded-xl bg-forest-50 border border-forest-100">
+            <div class="text-xs font-bold uppercase text-forest-700 mb-1">Zakon o lokalnoj samoupravi</div>
+            <div class="font-bold text-forest-900 text-base mb-1">Neposredni izbori za Savet MZ</div>
             <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
               Građani direktno i tajno glasaju za svoje komšije imenom i prezimenom na svake 4 godine. Svaki punoletni stanovnik te MZ može da se kandiduje uz prikupljanje potpisa podrške komšija.
             </p>
           </div>
-          <div class="p-4 rounded-xl bg-paper border border-stone-200">
+          <div class="p-4 rounded-xl bg-paper border border-forest-100">
             <div class="text-xs font-bold uppercase text-terracotta-600 mb-1">Tvoja glavna poluga</div>
-            <div class="font-bold text-petrol-900 text-base mb-1">Kandidatura + Zborovi građana</div>
+            <div class="font-bold text-forest-900 text-base mb-1">Kandidatura + Zborovi građana</div>
             <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
               Zbog tradicionalno niske izlaznosti (10–20%), organizovana grupa komšija može direktno ući u Savet MZ. Između izbora koriste se Zborovi građana i sednice Saveta na zahtev 15 građana.
             </p>
@@ -764,14 +952,14 @@
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="p-4 rounded-xl bg-terracotta-50 border border-terracotta-100">
             <div class="text-xs font-bold uppercase text-terracotta-600 mb-1">Zakon o glavnom gradu</div>
-            <div class="font-bold text-petrol-900 text-base mb-1">Posredan (skupštinski) izbor Saveta</div>
+            <div class="font-bold text-forest-900 text-base mb-1">Posredan (skupštinski) izbor Saveta</div>
             <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
               Beograđani ne glasaju direktno za članove Saveta MZ. Članove Saveta imenuje većina odbornika u Skupštini gradske opštine na osnovu odluke o osnivanju MZ.
             </p>
           </div>
-          <div class="p-4 rounded-xl bg-paper border border-stone-200">
-            <div class="text-xs font-bold uppercase text-petrol-700 mb-1">Tvoja glavna poluga</div>
-            <div class="font-bold text-petrol-900 text-base mb-1">Zbor građana i pisani zahtevi</div>
+          <div class="p-4 rounded-xl bg-paper border border-forest-100">
+            <div class="text-xs font-bold uppercase text-forest-700 mb-1">Tvoja glavna poluga</div>
+            <div class="font-bold text-forest-900 text-base mb-1">Zbor građana i pisani zahtevi</div>
             <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
               Iako nema neposrednih izbora, Savet MZ u Beogradu je po zakonu dužan da sazove Zbor građana na inicijativu stanovnika i da prosledi zahteve opštini ili Gradu Beogradu (rok za odgovor: 60 dana).
             </p>
@@ -782,11 +970,11 @@
 
     function setJurisdiction(mode) {
       if (mode === 'srbija') {
-        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white';
-        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900';
+        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white';
+        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900';
       } else {
-        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white';
-        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900';
+        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white';
+        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900';
       }
       jurisdictionContent.innerHTML = jurisdictionData[mode];
     }
@@ -836,10 +1024,10 @@
         const isChecked = !!savedChecks[item.id];
         if (isChecked) checkedCount++;
         return `
-          <label class="flex items-start gap-3.5 p-3.5 rounded-xl border ${isChecked ? 'bg-petrol-50/70 border-petrol-200' : 'bg-paper/40 border-stone-200'} cursor-pointer hover:border-petrol-700 transition">
-            <input type="checkbox" data-id="${item.id}" ${isChecked ? 'checked' : ''} class="mt-1 h-4 w-4 rounded border-stone-300 text-terracotta-500 focus:ring-terracotta-500" />
+          <label class="flex items-start gap-3.5 p-3.5 rounded-xl border ${isChecked ? 'bg-forest-50 border-forest-200' : 'bg-paper border-forest-100'} cursor-pointer hover:border-forest-700 transition">
+            <input type="checkbox" data-id="${item.id}" ${isChecked ? 'checked' : ''} class="mt-1 h-4 w-4 rounded border-stone-300 text-forest-700 focus:ring-forest-700" />
             <div>
-              <div class="text-sm font-semibold ${isChecked ? 'line-through text-stone-500' : 'text-petrol-900'}">${item.title}</div>
+              <div class="text-sm font-semibold ${isChecked ? 'line-through text-muted' : 'text-forest-900'}">${item.title}</div>
               <div class="text-xs text-stone-600 mt-0.5">${item.desc}</div>
             </div>
           </label>
@@ -978,9 +1166,9 @@ E-mail adresa: ___________________________`
     tplBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         tplBtns.forEach(b => {
-          b.className = 'tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition';
+          b.className = 'tpl-btn text-left p-3.5 rounded-lg border border-stone-300 bg-white hover:bg-forest-50 transition cursor-pointer';
         });
-        btn.className = 'tpl-btn text-left p-3.5 rounded-xl border-2 border-petrol-900 bg-petrol-50 transition';
+        btn.className = 'tpl-btn text-left p-3.5 rounded-lg border-2 border-forest-900 bg-forest-50 transition cursor-pointer';
         currentTpl = btn.dataset.tpl;
         generateDocText();
       });
@@ -990,11 +1178,436 @@ E-mail adresa: ___________________________`
     generateDocText();
 
     copyDocBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(printArea.textContent).then(() => {
+      const tempArea = document.createElement('textarea');
+      tempArea.value = printArea.textContent;
+      tempArea.style.position = 'fixed';
+      tempArea.style.left = '-9999px';
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand('copy');
         copyFeedback.classList.remove('hidden');
         setTimeout(() => copyFeedback.classList.add('hidden'), 2500);
-      });
+      } catch (err) {
+        console.error('Kopiranje nije uspelo', err);
+      }
+      document.body.removeChild(tempArea);
     });
+
+    // 8. Dodatak: Mapa i spisak beogradskih mesnih zajednica (pretraga, filter i klik za popunjavanje dopisa)
+    const belgradeMZs = [
+      {
+        municipality: 'Opština Čukarica',
+        short: 'Čukarica',
+        color: '#163A2C',
+        items: [
+          { name: 'Cerak', address: 'Kosmajska 56a', coords: [44.7495, 20.4150] },
+          { name: 'Železnik', address: 'Darinke Radović 37', coords: [44.7245, 20.3735] },
+          { name: 'Banovo brdo', address: 'Požeška 67a', coords: [44.7770, 20.4155] },
+          { name: 'Čukarička padina', address: 'Obalskih radnika 33', coords: [44.7825, 20.4060] },
+          { name: 'Mihajlovac', address: 'Kirovljeva 19', coords: [44.7705, 20.4190] },
+          { name: 'Ostružnica', address: 'Karađorđeva 13', coords: [44.7265, 20.3175] },
+          { name: 'Sremčica', address: 'Beogradska 156', coords: [44.6775, 20.3910] },
+          { name: 'Žarkovo', address: 'Trgovačka 18', coords: [44.7575, 20.4125] },
+          { name: 'Umka', address: 'Ilije Babića 2', coords: [44.6785, 20.3055] },
+          { name: 'Velika Moštanica', address: '1. maja 84', coords: [44.6645, 20.3535] },
+          { name: 'Rušanj', address: '13. septembra 27', coords: [44.6855, 20.4455] }
+        ]
+      },
+      {
+        municipality: 'Opština Rakovica',
+        short: 'Rakovica',
+        color: '#C85A32',
+        items: [
+          { name: 'Košutnjak', address: 'Kneza Višeslava 124', coords: [44.7665, 20.4365] },
+          { name: 'Kanarevo brdo', address: 'Ivana Mičurina 27', coords: [44.7535, 20.4515] },
+          { name: 'Duško Radović', address: 'Srpskih udarnih brigada 15', coords: [44.7475, 20.4485] },
+          { name: 'Miljakovački izvori', address: 'Velizara Stankovića 7', coords: [44.7415, 20.4615] },
+          { name: 'Sunčani breg', address: 'Miljakovačke staze 42', coords: [44.7285, 20.4655] },
+          { name: 'Miljakovac', address: 'Borska 41', coords: [44.7445, 20.4545] },
+          { name: 'Braća Veličković', address: 'Stanka Paunovića Veljka 38', coords: [44.7460, 20.4430] },
+          { name: 'Mitar Bakić', address: 'Miška Kranjca 12', coords: [44.7425, 20.4405] },
+          { name: 'Skojevska', address: 'Luke Vojvodića 24', coords: [44.7515, 20.4335] },
+          { name: 'Vidikovac 1 i 2', address: 'Vidikovački venac 80b', coords: [44.7375, 20.4275] },
+          { name: 'Kneževac', address: '2. septembra 14', coords: [44.7315, 20.4375] },
+          { name: 'Labudovo brdo', address: 'Serdara Janka Vukotića 2', coords: [44.7255, 20.4295] },
+          { name: 'Petlovo brdo', address: 'Mrakovička 35', coords: [44.7195, 20.4235] },
+          { name: 'Kijevo', address: 'Oslobođenja 54', coords: [44.7225, 20.4435] },
+          { name: 'Avala grad', address: '13. oktobra 23', coords: [44.7145, 20.4485] },
+          { name: 'Resnik', address: 'Slavka Miljkovića 38', coords: [44.7065, 20.4565] },
+          { name: 'Železnička stanica', address: 'Patrijarha Dimitrija 24', coords: [44.7420, 20.4465] }
+        ]
+      },
+      {
+        municipality: 'Opština Voždovac',
+        short: 'Voždovac',
+        color: '#235842',
+        note: 'Napomena: Medaković 1 i 2 ne postoje kao mesne zajednice.',
+        items: [
+          { name: 'Banjica', address: 'Bulevar oslobođenja 219', coords: [44.7585, 20.4745] },
+          { name: 'Gornji Voždovac', address: 'Vojvode Stepe 263', coords: [44.7735, 20.4775] },
+          { name: 'Činovnička kolonija', address: 'Vojvode Stepe 196', coords: [44.7775, 20.4735] },
+          { name: 'Donji Voždovac', address: 'Vojvode Stepe 114', coords: [44.7825, 20.4745] },
+          { name: 'Autokomanda', address: 'Bulevar oslobođenja 84', coords: [44.7885, 20.4675] },
+          { name: 'Tešića kupatilo', address: 'Kumodraška 56', coords: [44.7855, 20.4835] },
+          { name: 'Pašino brdo', address: 'Gospodara Vučića 189', coords: [44.7895, 20.4915] },
+          { name: 'Vinogradi', address: 'Rada Neimara 14', coords: [44.7845, 20.4935] },
+          { name: 'Šumice', address: 'Ustanička 125c', coords: [44.7835, 20.4995] },
+          { name: 'Dušanovac', address: 'Ozrenska 39', coords: [44.7855, 20.4895] },
+          { name: 'Milorad Medaković', address: 'Radovana Simića Cige 14', coords: [44.7765, 20.4925] },
+          { name: 'Milunka Savić', address: 'Meštrovićeva 34', coords: [44.7715, 20.4865] },
+          { name: 'Braće Jerković', address: 'Braće Jerković 119', coords: [44.7655, 20.4945] },
+          { name: 'Mitrovo brdo', address: 'Zaplanjska 86', coords: [44.7615, 20.4995] },
+          { name: 'Kumodraž', address: 'Vojvode Stepe 514', coords: [44.7435, 20.5015] },
+          { name: 'Jajinci', address: 'Bulevar JNA 86', coords: [44.7365, 20.4815] },
+          { name: 'Rakovica', address: 'Bulevar JNA 172', coords: [44.7255, 20.4935] },
+          { name: 'Beli Potok', address: 'Avalska 47', coords: [44.7035, 20.5175] },
+          { name: 'Pinosava', address: 'Nova 1. br. 12', coords: [44.6935, 20.4915] },
+          { name: 'Zuce', address: '14. oktobra 4', coords: [44.6965, 20.5515] },
+          { name: 'Ripanj', address: 'Erčanska 1', coords: [44.6425, 20.5185] },
+          { name: 'Kumodraž 1 i 2', address: 'Kumodraška 240', coords: [44.7535, 20.4965] },
+          { name: 'Medaković 3', address: 'Borivoja Stevanovića 41', coords: [44.7735, 20.5045] }
+        ]
+      },
+      {
+        municipality: 'Opština Savski venac',
+        short: 'Savski venac',
+        color: '#8C3B1E',
+        items: [
+          { name: 'Zapadni Vračar', address: 'Svetozara Markovića 68', coords: [44.8005, 20.4565] },
+          { name: 'Zeleni venac', address: 'Kraljice Natalije 19', coords: [44.8135, 20.4565] },
+          { name: 'Slobodan Penezić – Krcun', address: 'Sarajevska 66', coords: [44.8035, 20.4535] },
+          { name: 'Gavrilo Princip', address: 'Gavrila Principa 42', coords: [44.8095, 20.4555] },
+          { name: 'NH Stevan Filipović', address: 'Dr Milutina Ivkovića 2a', coords: [44.7925, 20.4555] },
+          { name: 'Topčidersko brdo – Senjak', address: 'Vase Pelagića 54', coords: [44.7915, 20.4385] },
+          { name: 'Dedinje', address: 'Bulevar kneza Aleksandra Karađorđevića 29', coords: [44.7775, 20.4545] },
+          { name: 'Vojvoda Mišić', address: 'Bulevar vojvode Mišića 37', coords: [44.7945, 20.4345] },
+          { name: 'Četvrti juli', address: 'Ljutice Bogdana 1a', coords: [44.7825, 20.4615] }
+        ]
+      },
+      {
+        municipality: 'Opština Zvezdara',
+        short: 'Zvezdara',
+        color: '#2F6F54',
+        items: [
+          { name: 'Bulbulder', address: 'Dimitrija Tucovića 83', coords: [44.8035, 20.4945] },
+          { name: 'Veliki Mokri Lug', address: 'Nikole Grulovića 14', coords: [44.7695, 20.5265] },
+          { name: 'Mali Mokri Lug', address: 'Bulevar kralja Aleksandra 532', coords: [44.7825, 20.5225] },
+          { name: 'Vojvoda Mišić', address: 'Zahumska 23a', coords: [44.7985, 20.4935] },
+          { name: 'Vojvoda Putnik', address: 'Vojvode Brane 18', coords: [44.7965, 20.4885] },
+          { name: 'Vračarsko polje', address: 'Grčića Milenka 4b', coords: [44.7935, 20.4985] },
+          { name: 'Vukov spomenik', address: 'Ruzveltova 1', coords: [44.8055, 20.4785] },
+          { name: 'Zvezdara', address: 'Bulevar kralja Aleksandra 243', coords: [44.8025, 20.5025] },
+          { name: 'Zeleno brdo', address: 'Bulevar kralja Aleksandra 395', coords: [44.7895, 20.5145] },
+          { name: 'Lipov lad', address: 'Bulevar kralja Aleksandra 298', coords: [44.7975, 20.4985] },
+          { name: 'Mirijevo', address: 'Mirijevski venac 22', coords: [44.7945, 20.5315] },
+          { name: 'Novo Mirijevo', address: 'Koste Nađa 32', coords: [44.7895, 20.5375] },
+          { name: 'Severni bulevar', address: 'Veljka Dugoševića 26', coords: [44.8075, 20.4925] },
+          { name: 'Smederevski đeram', address: 'Bulevar kralja Aleksandra 130', coords: [44.8015, 20.4845] },
+          { name: 'Stevan Sinđelić', address: 'Bulevar kralja Aleksandra 174', coords: [44.8025, 20.4895] },
+          { name: 'Ćirilo i Metodije', address: 'Učiteljska 60', coords: [44.8005, 20.4875] },
+          { name: 'Slavujev potok', address: 'Ljube Didića 21', coords: [44.8065, 20.4865] }
+        ]
+      },
+      {
+        municipality: 'Opština Palilula',
+        short: 'Palilula',
+        color: '#B54B25',
+        items: [
+          { name: 'Tašmajdan', address: 'Ilije Garašanina 24', coords: [44.8095, 20.4715] },
+          { name: 'Starina Novak', address: 'Knez Danilova 22', coords: [44.8125, 20.4745] },
+          { name: 'Stara Palilula', address: 'Takovska 12', coords: [44.8145, 20.4795] },
+          { name: 'Jovan Cvijić', address: 'Cvijićeva 79', coords: [44.8135, 20.4845] },
+          { name: 'Nadežda Petrović', address: 'Zdravka Čelara 12', coords: [44.8115, 20.4885] },
+          { name: 'Hadžipopovac', address: 'Primorska 11', coords: [44.8105, 20.4935] },
+          { name: 'Stara Karaburma', address: 'Marijane Gregoran 69', coords: [44.8145, 20.5085] },
+          { name: 'Stevan Hristić', address: 'Patrisa Lumumbe 43', coords: [44.8125, 20.5145] },
+          { name: 'Despot Stefan Lazarević', address: 'Diljska 12', coords: [44.8105, 20.5195] },
+          { name: 'Filip Višnjić', address: 'Salvadora Aljendea 18', coords: [44.8155, 20.5185] },
+          { name: 'Karaburma – Dunav', address: 'Uralska 11', coords: [44.8175, 20.5125] },
+          { name: 'Rospi Ćuprija', address: 'Višnjička 110', coords: [44.8135, 20.5285] },
+          { name: 'Višnjička banja', address: 'Romanijska 14', coords: [44.8175, 20.5435] },
+          { name: 'Stara Borča', address: 'Ivana Milutinovića 12', coords: [44.8725, 20.4535] },
+          { name: 'Borča greda', address: 'Bele Bartoka 36', coords: [44.8685, 20.4645] },
+          { name: 'Nova Borča', address: 'Valjevskog odreda 49', coords: [44.8785, 20.4595] },
+          { name: 'Ovča', address: 'Mihaja Emineskua 79', coords: [44.8885, 20.5315] },
+          { name: 'Padinska Skela', address: 'Dejana Smiljkovića 14', coords: [44.9435, 20.4365] },
+          { name: 'Slanci', address: 'Maršala Tita 43', coords: [44.8055, 20.5795] },
+          { name: 'Veliko Selo', address: 'Beogradska 32', coords: [44.8235, 20.6095] },
+          { name: 'Višnjica', address: 'Maršala Tita 105', coords: [44.8255, 20.5565] },
+          { name: 'Dunavski venac', address: 'Zrenjaninski put 44', coords: [44.8535, 20.4785] },
+          { name: 'Kotež', address: 'Trajka Grkovića 5', coords: [44.8465, 20.4715] },
+          { name: 'Bara Reva', address: 'Pančevački put 78', coords: [44.8495, 20.5195] }
+        ]
+      },
+      {
+        municipality: 'Opština Zemun',
+        short: 'Zemun',
+        color: '#1D4938',
+        items: [
+          { name: 'Batajnica', address: 'Majora Zorana Radosavljevića 70', coords: [44.9045, 20.2815] },
+          { name: 'Zemun polje', address: 'Dušana Mađarčića Korčagina 5', coords: [44.8665, 20.3315] },
+          { name: 'Ugrinovci', address: 'Beogradska 1', coords: [44.8765, 20.1885] },
+          { name: 'Nova Galenika', address: 'Momčila Radivojevića 34', coords: [44.8565, 20.3695] }
+        ]
+      },
+      {
+        municipality: 'Opština Novi Beograd',
+        short: 'Novi Beograd',
+        color: '#3B7A5E',
+        items: [
+          { name: 'Paviljoni', address: 'Goce Delčeva 44', coords: [44.8285, 20.4095] },
+          { name: 'Studentski grad', address: 'Narodnih heroja 30', coords: [44.8245, 20.4015] },
+          { name: 'Staro sajmište', address: 'Brodarska 1', coords: [44.8125, 20.4435] },
+          { name: 'Bežanija', address: 'Pere Segedinca 13', coords: [44.8065, 20.3765] },
+          { name: 'Ledine', address: 'Surčinska 9b', coords: [44.8035, 20.3495] },
+          { name: 'Fontana', address: 'Pariske komune 13', coords: [44.8225, 20.4115] },
+          { name: 'Pariske komune', address: 'Pariske komune 39', coords: [44.8255, 20.4065] },
+          { name: 'Ušće', address: 'Bulevar Mihajla Pupina 6', coords: [44.8165, 20.4365] },
+          { name: 'Ikarus', address: 'Aleksinačkih rudara 37', coords: [44.8325, 20.4135] },
+          { name: 'Stari aerodrom', address: 'Omladinskih brigada 33', coords: [44.8155, 20.3985] },
+          { name: 'Akademija', address: 'Bulevar umetnosti 27', coords: [44.8195, 20.4225] },
+          { name: 'Sava', address: 'Jurija Gagarina 81', coords: [44.8065, 20.4315] },
+          { name: 'Gazela', address: 'Bulevar Arsenija Čarnojevića 78', coords: [44.8035, 20.4245] },
+          { name: 'Savski kej', address: 'Jurija Gagarina 221', coords: [44.7975, 20.3885] },
+          { name: 'Bežanijski blokovi', address: 'Gandijeva 114', coords: [44.8035, 20.3865] },
+          { name: 'Dunavski kej', address: 'Bulevar maršala Tolbuhina 46', coords: [44.8335, 20.4195] },
+          { name: 'Mladost', address: 'Nehruova 51', coords: [44.8125, 20.3845] },
+          { name: 'Bežanijska kosa', address: 'Partizanske avijacije 25', coords: [44.8185, 20.3775] },
+          { name: 'Dr Ivan Ribar', address: 'Dr Ivana Ribara 91', coords: [44.8005, 20.3695] }
+        ]
+      }
+    ];
+
+    const bgMzSearch = document.getElementById('bg-mz-search');
+    const bgMzFilters = document.getElementById('bg-mz-filters');
+    const bgMzList = document.getElementById('bg-mz-list');
+    const bgMzCount = document.getElementById('bg-mz-count');
+    const bgMzLegend = document.getElementById('bg-mz-legend');
+    const resetMapViewBtn = document.getElementById('reset-map-view-btn');
+    let selectedMunicipality = 'Sve';
+
+    // Inicijalizacija standardne OpenStreetMap mape
+    const DEFAULT_CENTER = [44.805, 20.455];
+    const DEFAULT_ZOOM = 11;
+    let bgMap = null;
+    let markerLayerGroup = null;
+    const markerRegistry = new Map();
+
+    if (typeof L !== 'undefined' && document.getElementById('bg-mz-map')) {
+      bgMap = L.map('bg-mz-map', {
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
+        scrollWheelZoom: false
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> doprinosioci',
+        maxZoom: 19
+      }).addTo(bgMap);
+
+      markerLayerGroup = L.layerGroup().addTo(bgMap);
+
+      resetMapViewBtn.addEventListener('click', () => {
+        bgMap.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+      });
+    }
+
+    // Globalna funkcija za dugme unutar Leaflet popup-a
+    window.fillMzTemplateFromMap = function(mzName, opstinaShort, mzAddress) {
+      inpMz.value = `MZ ${mzName}`;
+      inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+      generateDocText();
+      const templateBox = document.getElementById('template-selector');
+      if (templateBox) {
+        templateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    function renderBgMzLegend() {
+      if (!bgMzLegend) return;
+      bgMzLegend.innerHTML = belgradeMZs.map(g => `
+        <span class="inline-flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${g.color}"></span>
+          <span>${g.short}</span>
+        </span>
+      `).join('');
+    }
+
+    function renderBgMzFilters() {
+      const filterNames = ['Sve', ...belgradeMZs.map(m => m.short)];
+      bgMzFilters.innerHTML = filterNames.map(name => {
+        const active = selectedMunicipality === name;
+        return `
+          <button
+            type="button"
+            data-mun="${name}"
+            class="bg-mun-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+              active
+                ? 'bg-forest-900 text-white shadow-2xs'
+                : 'bg-forest-50 text-forest-900 border border-forest-100 hover:bg-forest-100'
+            }"
+          >
+            ${name}
+          </button>
+        `;
+      }).join('');
+
+      bgMzFilters.querySelectorAll('.bg-mun-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedMunicipality = btn.dataset.mun;
+          renderBgMzFilters();
+          renderBgMzList(true);
+        });
+      });
+    }
+
+    function renderBgMzList(fitMapBounds = false) {
+      const query = bgMzSearch.value.trim().toLowerCase();
+      let totalVisible = 0;
+      const visibleBounds = [];
+
+      if (markerLayerGroup) {
+        markerLayerGroup.clearLayers();
+      }
+      markerRegistry.clear();
+
+      const cardsHtml = belgradeMZs
+        .filter(group => selectedMunicipality === 'Sve' || group.short === selectedMunicipality)
+        .map(group => {
+          const munMatches = group.municipality.toLowerCase().includes(query);
+          const filteredItems = query && !munMatches
+            ? group.items.filter(item =>
+                item.name.toLowerCase().includes(query) ||
+                (item.address && item.address.toLowerCase().includes(query))
+              )
+            : group.items;
+
+          if (filteredItems.length === 0) return '';
+          totalVisible += filteredItems.length;
+
+          // Dodaj markere na mapu za filtrirane MZ
+          if (bgMap && markerLayerGroup && typeof L !== 'undefined') {
+            filteredItems.forEach(mzObj => {
+              visibleBounds.push(mzObj.coords);
+              const marker = L.circleMarker(mzObj.coords, {
+                radius: 7,
+                fillColor: group.color,
+                color: '#FFFFFF',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.92
+              });
+
+              const safeMz = mzObj.name.replace(/'/g, "\\'");
+              const safeMun = group.short.replace(/'/g, "\\'");
+              const safeAddr = (mzObj.address || '').replace(/'/g, "\\'");
+              marker.bindPopup(`
+                <div style="min-width: 190px;">
+                  <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #526058;">
+                    ${group.municipality}
+                  </div>
+                  <div style="font-family: 'Newsreader', Georgia, serif; font-size: 16px; font-weight: 700; color: #163A2C; margin: 2px 0 3px;">
+                    MZ „${mzObj.name}“
+                  </div>
+                  <div style="font-size: 11px; color: #526058; margin-bottom: 8px;">
+                    Adresa: <strong style="color: #1A241E;">${mzObj.address}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    onclick="fillMzTemplateFromMap('${safeMz}', '${safeMun}', '${safeAddr}')"
+                    style="width: 100%; padding: 6px 10px; border-radius: 8px; background: #163A2C; color: #FFFFFF; font-size: 11px; font-weight: 600; border: none; cursor: pointer;"
+                  >
+                    Ubaci u šablon dopisa &rarr;
+                  </button>
+                </div>
+              `);
+
+              marker.addTo(markerLayerGroup);
+              markerRegistry.set(`${group.short}::${mzObj.name}`, marker);
+            });
+          }
+
+          const chips = filteredItems.map(mzObj => `
+            <button
+              type="button"
+              data-mz="${mzObj.name}"
+              data-opstina="${group.short}"
+              data-address="${mzObj.address}"
+              title="Prikaži MZ „${mzObj.name}“ (${mzObj.address}) na mapi i ubaci u generator dopisa"
+              class="mz-pick-btn inline-flex items-baseline gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-paper border border-forest-100 text-forest-900 hover:bg-terracotta-50 hover:border-terracotta-500 hover:text-terracotta-600 transition cursor-pointer text-left"
+            >
+              <span class="w-1.5 h-1.5 rounded-full shrink-0 self-center" style="background-color: ${group.color}"></span>
+              <span>
+                <strong class="font-semibold">${mzObj.name}</strong>
+                <span class="text-[11px] text-muted font-normal"> · ${mzObj.address}</span>
+              </span>
+            </button>
+          `).join('');
+
+          return `
+            <div class="bg-white border border-forest-100 rounded-2xl p-5 shadow-2xs flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3 pb-2 border-b border-forest-100">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${group.color}"></span>
+                    <h3 class="font-serif font-bold text-xl text-forest-900">${group.municipality}</h3>
+                  </div>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-forest-50 text-forest-700">${filteredItems.length} MZ</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${chips}
+                </div>
+              </div>
+              ${group.note ? `<p class="text-xs italic text-terracotta-600 pt-2 border-t border-forest-50">${group.note}</p>` : ''}
+            </div>
+          `;
+        })
+        .join('');
+
+      if (bgMap && fitMapBounds && visibleBounds.length > 0) {
+        if (selectedMunicipality === 'Sve' && !query) {
+          bgMap.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+        } else if (visibleBounds.length === 1) {
+          bgMap.setView(visibleBounds[0], 14);
+        } else {
+          bgMap.fitBounds(visibleBounds, { padding: [32, 32], maxZoom: 14 });
+        }
+      }
+
+      bgMzCount.textContent = `Prikazano: ${totalVisible} MZ`;
+      bgMzList.innerHTML = cardsHtml || `
+        <div class="sm:col-span-2 bg-white border border-forest-100 rounded-2xl p-6 text-center text-sm text-muted">
+          Nema pronađenih mesnih zajednica za zadati pojam pretrage.
+        </div>
+      `;
+
+      bgMzList.querySelectorAll('.mz-pick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mzName = btn.dataset.mz;
+          const opstinaShort = btn.dataset.opstina;
+          const mzAddress = btn.dataset.address;
+          inpMz.value = `MZ ${mzName}`;
+          inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+          generateDocText();
+
+          const marker = markerRegistry.get(`${opstinaShort}::${mzName}`);
+          if (bgMap && marker) {
+            const mapEl = document.getElementById('bg-mz-map');
+            if (mapEl) {
+              mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            bgMap.setView(marker.getLatLng(), 15);
+            marker.openPopup();
+          }
+        });
+      });
+    }
+
+    bgMzSearch.addEventListener('input', () => renderBgMzList(true));
+    renderBgMzLegend();
+    renderBgMzFilters();
+    renderBgMzList(false);
   </script>
 </body>
 </html>
