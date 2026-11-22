@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="sr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesne zajednice 101</title>
+  <meta name="description" content="Praktičan vodič za korišćenje mesnih zajednica, zborova građana i instrumenata lokalne samouprave u Srbiji." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#FAF8F5',
+            surface: '#FFFFFF',
+            ink: '#1C1917',
+            muted: '#57534E',
+            petrol: {
+              900: '#132A3A',
+              800: '#1B3B52',
+              700: '#244D6B',
+              100: '#E6EEF4',
+              50: '#F3F7FA'
+            },
+            terracotta: {
+              600: '#B54B25',
+              500: '#C85A32',
+              100: '#FCECE6',
+              50: '#FDF5F2'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Newsreader', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #1C1917;
+    }
+    .toc-link.active {
+      color: #C85A32;
+      border-left-color: #C85A32;
+      font-weight: 600;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-area, #print-area * {
+        visibility: visible;
+      }
+      #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-terracotta-100 selection:text-petrol-900">
+
+  <!-- Mobile Top Header -->
+  <header class="lg:hidden sticky top-0 z-40 bg-paper/95 backdrop-blur border-b border-stone-200 px-4 py-3 flex items-center justify-between">
+    <a href="#uvod" class="font-serif font-bold text-xl text-petrol-900 tracking-tight">Mesne zajednice 101</a>
+    <button id="mobile-menu-btn" class="text-sm font-medium text-petrol-900 px-3 py-1.5 rounded-lg border border-stone-300 bg-white">
+      Sadržaj
+    </button>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" class="hidden lg:hidden fixed inset-0 z-50 bg-ink/40 backdrop-blur-xs">
+    <div class="bg-paper w-72 h-full p-6 shadow-xl border-r border-stone-200 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <span class="font-serif font-bold text-lg text-petrol-900">Sadržaj vodiča</span>
+          <button id="close-drawer-btn" class="text-stone-500 hover:text-ink text-xl leading-none">&times;</button>
+        </div>
+        <nav class="space-y-3 text-sm">
+          <a href="#uvod" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Uvod</a>
+          <a href="#poglavlje-1" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">I. Mesto ili zajednica?</a>
+          <a href="#poglavlje-2" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">II. Alati i pravila za pokretače</a>
+          <a href="#poglavlje-3" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">III. Primeri dobre prakse</a>
+          <a href="#poglavlje-4" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">IV. Pripremni spisak i šabloni</a>
+          <a href="#preporuke" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Preporuke za oživljavanje</a>
+          <a href="#impresum" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Kontakt / Impresum</a>
+        </nav>
+      </div>
+      <div class="text-xs text-stone-500 border-t border-stone-200 pt-4">
+        Digitalna publikacija i priručnik za mesnu samoupravu.
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-14">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-12">
+
+      <!-- Left Sidebar TOC (Desktop) -->
+      <aside class="hidden lg:block lg:col-span-3">
+        <div class="sticky top-10 space-y-8">
+          <div>
+            <a href="#uvod" class="font-serif font-bold text-2xl text-petrol-900 tracking-tight block">
+              Mesne zajednice 101
+            </a>
+            <div class="h-1 w-12 bg-terracotta-500 mt-3 rounded-full"></div>
+          </div>
+
+          <nav aria-label="Sadržaj" class="space-y-1 text-sm">
+            <a href="#uvod" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              Uvod
+            </a>
+            <a href="#poglavlje-1" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              I. Šta je mesna zajednica?
+            </a>
+            <a href="#poglavlje-2" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              II. Alati i pravila za pokretače
+            </a>
+            <a href="#poglavlje-3" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              III. Primeri dobre prakse
+            </a>
+            <a href="#poglavlje-4" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              IV. Spisak i šabloni dopisa
+            </a>
+            <a href="#preporuke" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              Preporuke za oživljavanje
+            </a>
+            <a href="#impresum" class="toc-link block pl-3 py-1.5 border-l-2 border-stone-200 text-stone-600 hover:text-petrol-900 transition">
+              Kontakt / Impresum
+            </a>
+          </nav>
+
+          <!-- Checklist Progress Box -->
+          <div class="bg-white border border-stone-200 rounded-xl p-4 shadow-2xs">
+            <div class="flex items-center justify-between text-xs font-medium text-stone-600 mb-2">
+              <span>Spremnost za akciju</span>
+              <span id="sidebar-progress-text" class="text-petrol-900 font-semibold">0 / 6</span>
+            </div>
+            <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+              <div id="sidebar-progress-bar" class="bg-terracotta-500 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <a href="#poglavlje-4" class="mt-3 inline-block text-xs font-medium text-terracotta-600 hover:underline">
+              Otvori pripremni spisak &rarr;
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Editorial Content -->
+      <main class="lg:col-span-9 max-w-3xl space-y-20">
+
+        <!-- HERO / UVOD -->
+        <section id="uvod" class="scroll-mt-16">
+          <h1 class="font-serif font-bold text-4xl sm:text-5xl lg:text-6xl text-petrol-900 tracking-tight leading-tight">
+            Mesne zajednice 101
+          </h1>
+
+          <p class="mt-6 text-lg sm:text-xl text-stone-700 leading-relaxed">
+            Mesne zajednice predstavljaju najbližu institucionalnu tačku susreta građana i lokalne samouprave. Iako su decenijama gurane na marginu i često posmatrane samo kao administrativne kancelarije, one ostaju zakonski okvir kroz koji komšije mogu da se organizuju, brane javni prostor, kontrolišu rad lokalnih organa i neposredno odlučuju o životu u svom kraju.
+          </p>
+
+          <!-- Kardelj Quote -->
+          <blockquote class="mt-8 bg-white border-l-4 border-terracotta-500 rounded-r-xl p-6 sm:p-8 shadow-2xs border-y border-r border-stone-200">
+            <p class="font-serif italic text-lg sm:text-xl text-petrol-900 leading-relaxed">
+              „Mesna zajednica nije pre svega institucija, organizacioni mehanizam, teritorijalna jedinica. Ona je zajednica ljudi i od toga treba uvek polaziti. Zato ona ne trpi shemu ni u pogledu teritorijalnog određenja, ni metoda funkcionisanja, ni organizacionih formi, niti planiranja. Ako je to tako, onda je svaka zajednička ljudska aktivnost u naselju, a ne samo politička u užem smislu reči, koja zbližava ljude, razvija solidarnost i samopomoć, svest o zajedništvu (kulturna, sportska, humanitarna, socijalna, zabavna) od značaja za ostvarivanje mesne zajednice i treba je podizati.“
+            </p>
+            <footer class="mt-4 text-sm font-medium text-stone-600">
+              — Edvard Kardelj, <cite class="not-italic font-semibold text-petrol-800">„O komuni“</cite>
+            </footer>
+          </blockquote>
+        </section>
+
+        <hr class="border-stone-200" />
+
+        <!-- POGLAVLJE I -->
+        <section id="poglavlje-1" class="scroll-mt-16 space-y-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje I</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+              Šta je mesna zajednica: Mesto ili zajednica?
+            </h2>
+          </div>
+
+          <div class="space-y-4 text-stone-700 leading-relaxed text-base sm:text-lg">
+            <p>
+              U svakodnevnom govoru pod mesnom zajednicom najčešće podrazumevamo fizički prostor — zgradu ili kancelariju u kraju sa oglasnom tablom. Međutim, suština ovog instituta leži u <strong class="text-petrol-900">zajednici ljudi</strong> koji dele isti prostor i svakodnevne životne potrebe.
+            </p>
+            <p>
+              Mesna zajednica <strong class="text-petrol-900">nije organ vlasti i nema izvršnu moć</strong> — ona ne izdaje građevinske dozvole, ne piše kazne i ne raspolaže komunalnim preduzećima. Njena snaga je <strong class="text-petrol-900">legitimaciona moć</strong>: ona je zakonski priznata poluga kroz koju glas komšiluka postaje zvaničan institucionalni zahtev na koji opština ili grad moraju da odgovore.
+            </p>
+          </div>
+
+          <!-- Core Theoretical Pillars -->
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div class="bg-white border border-stone-200 rounded-xl p-6 shadow-2xs">
+              <div class="text-xs font-bold uppercase tracking-wider text-petrol-700 mb-2">Načelo odlučivanja</div>
+              <h3 class="font-serif font-bold text-xl text-petrol-900 mb-2">Princip supsidijarnosti</h3>
+              <p class="text-sm text-stone-600 leading-relaxed">
+                Temeljni princip lokalne demokratije koji nalaže da se odlučivanje o zajedničkim pitanjima uvek prenese na najniži mogući nivo društvene organizacije — tamo gde ljudi neposredno žive i osećaju posledice tih odluka.
+              </p>
+            </div>
+
+            <div class="bg-white border border-stone-200 rounded-xl p-6 shadow-2xs">
+              <div class="text-xs font-bold uppercase tracking-wider text-terracotta-600 mb-2">Novi okvir saradnje</div>
+              <h3 class="font-serif font-bold text-xl text-petrol-900 mb-2">Zajednička dobra (Commons)</h3>
+              <p class="text-sm text-stone-600 leading-relaxed">
+                Koncept „partnerske države“ i zajedničkih dobara traži rešenja u trouglu država–tržište–građani kroz udruživanje civilnog sektora i komšija na najnižem nivou, gde moć ostaje na svom izvoru umesto da se trajno delegira.
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive 4 Models of Neighbourhood Governance (Lowndes & Sullivan) -->
+          <div class="bg-petrol-50 border border-petrol-100 rounded-2xl p-6 sm:p-8">
+            <div class="mb-5">
+              <span class="text-xs font-semibold uppercase tracking-wider text-petrol-700">Tipologija lokalnog upravljanja</span>
+              <h3 class="font-serif font-bold text-2xl text-petrol-900 mt-1">
+                Četiri modela upravljanja komšilukom
+              </h3>
+              <p class="text-sm text-stone-600 mt-1">
+                Prema teoretičarima Loundes i Salivenu (<em>„How low can you go?“</em>), uloga građana zavisi od modela lokalne uprave. Izaberi model da vidiš razliku:
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6" id="model-tabs">
+              <button data-model="0" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-petrol-900 text-white shadow-2xs">
+                1. Osnaživanje zajednice
+              </button>
+              <button data-model="1" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+                2. Partnerstvo u lokalu
+              </button>
+              <button data-model="2" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+                3. Vlast u zajednici
+              </button>
+              <button data-model="3" class="model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50">
+                4. Tržišno upravljanje
+              </button>
+            </div>
+
+            <div id="model-display" class="bg-white rounded-xl p-5 sm:p-6 border border-stone-200 grid sm:grid-cols-2 gap-4">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-stone-200" />
+
+        <!-- POGLAVLJE II -->
+        <section id="poglavlje-2" class="scroll-mt-16 space-y-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje II</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+              Alati i pravila za pokretače u komšiluku
+            </h2>
+            <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
+              Da bi pokrenuo inicijativu u svom kraju, važno je da znaš koja pravila važe u tvom gradu ili opštini i koje zakonske poluge obavezuju organe vlasti da ti odgovore.
+            </p>
+          </div>
+
+          <!-- Beograd vs Srbija Switcher -->
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-stone-200">
+              <div>
+                <h3 class="font-serif font-bold text-2xl text-petrol-900">Gde pokrećeš inicijativu?</h3>
+                <p class="text-sm text-stone-600 mt-1">Pravila izbora Saveta MZ razlikuju se u Beogradu u odnosu na ostatak Srbije.</p>
+              </div>
+              <div class="inline-flex rounded-xl bg-stone-100 p-1 self-start">
+                <button id="btn-srbija" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white">
+                  Ostatak Srbije
+                </button>
+                <button id="btn-beograd" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900">
+                  Grad Beograd
+                </button>
+              </div>
+            </div>
+
+            <div id="jurisdiction-content" class="pt-6 space-y-4">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Preventive Power / Urbanism -->
+          <div class="bg-terracotta-50 border border-terracotta-100 rounded-2xl p-6 sm:p-8">
+            <div class="text-xs font-bold uppercase tracking-wider text-terracotta-600 mb-2">Odbrana javnog prostora</div>
+            <h3 class="font-serif font-bold text-2xl text-petrol-900 mb-3">
+              „Najvažnije što je MZ uradila je ono što je sprečila da se uradi“
+            </h3>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed mb-4">
+              Mesne zajednice imaju ključnu ulogu u zaštiti parkova, igrališta i javnih površina od štetnih urbanističkih izmena. Dok se danas javni uvidi često svode na formalnost u centralnim upravnim zgradama, iskustvo izrade „Zlatnog plana“ (GUP Beograda 1972. godine) pokazuje kako izgleda stvarna participacija: tada je javna rasprava sprovedena u <strong class="text-petrol-900">preko 200 mesnih zajednica</strong>, gde su građani direktno davali primedbe i menjali planove za svoj kraj.
+            </p>
+            <div class="bg-white/80 rounded-xl p-4 border border-terracotta-100 text-sm text-stone-700">
+              <strong class="text-petrol-900">Kako to koristiti danas:</strong> Kada se najavi izmena plana detaljne regulacije ili gradnja na zelenoj površini, građani mogu preko Zbora građana ili zahteva Savetu MZ zatražiti organizovanje javne prezentacije plana direktno u prostorijama svoje mesne zajednice.
+            </div>
+          </div>
+
+          <!-- Interactive Signature Calculator & 4 Tools -->
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
+            <div>
+              <h3 class="font-serif font-bold text-2xl text-petrol-900">Kalkulator potpisa i zakonski pragovi</h3>
+              <p class="text-sm text-stone-600 mt-1">
+                Unesi približan broj upisanih birača u tvojoj mesnoj zajednici (ili opštini) da vidiš koliko potpisa je potrebno za pokretanje pojedinih mehanizama:
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-paper p-4 rounded-xl border border-stone-200">
+              <label for="voters-input" class="text-sm font-semibold text-petrol-900">
+                Broj birača na teritoriji MZ / opštine:
+              </label>
+              <input
+                type="number"
+                id="voters-input"
+                value="5000"
+                min="50"
+                step="100"
+                class="w-full sm:w-44 px-3.5 py-2 rounded-lg border border-stone-300 bg-white text-petrol-900 font-bold text-base focus:outline-hidden focus:border-terracotta-500"
+              />
+              <span class="text-xs text-stone-500">Proveri tačan prag u Statutu svoje opštine/MZ.</span>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">1. Sednica Saveta MZ</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Fiksni broj</span>
+                </div>
+                <div class="font-serif font-bold text-3xl text-petrol-900 my-1">15 građana</div>
+                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                  Predsednik Saveta je dužan da sazove sednicu Saveta MZ na pisani zahtev najmanje 15 građana sa teritorije te mesne zajednice.
+                </p>
+              </div>
+
+              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-terracotta-600">2. Zbor građana</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-terracotta-100 text-terracotta-600">Rok 60 dana</span>
+                </div>
+                <div id="calc-zbor" class="font-serif font-bold text-3xl text-petrol-900 my-1">~500 birača (10%)</div>
+                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                  Kvorum i broj potpisa uređuje statut (najčešće do 10%). Nadležni organi moraju da razmotre odluke zbora i odgovore u roku od <strong>60 dana</strong>.
+                </p>
+              </div>
+
+              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">3. Građanska inicijativa</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Rok 60 dana</span>
+                </div>
+                <div id="calc-inicijativa" class="font-serif font-bold text-3xl text-petrol-900 my-1">250 birača (5%)</div>
+                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                  Za predlaganje donošenja ili izmene opštinskih odluka potrebno je 5% potpisa birača. Skupština mora da održi raspravu i odgovori u roku od <strong>60 dana</strong>.
+                </p>
+              </div>
+
+              <div class="border border-stone-200 rounded-xl p-5 bg-paper/50">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-petrol-700">4. Referendum / Osnivanje MZ</span>
+                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-petrol-100 text-petrol-900">Obavezujuće</span>
+                </div>
+                <div id="calc-referendum" class="font-serif font-bold text-3xl text-petrol-900 my-1">500 birača (10%)</div>
+                <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                  Najmanje 10% birača potrebno je za predlog osnivanja/ukidanja MZ ili raspisivanje referenduma (uključujući uvođenje samodoprinosa u novcu, radu ili robi).
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-petrol-50 border border-petrol-100 rounded-xl p-4 text-xs sm:text-sm text-petrol-900">
+              <strong>Šta ako Savet MZ odbije da sazove Zbor građana?</strong> Ukoliko Savet ignoriše uredan zahtev građana, zbor je dužan da sazove predsednik skupštine opštine ili grada, a građani mogu pokrenuti i postupak za smenu pasivnog Saveta MZ.
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-stone-200" />
+
+        <!-- POGLAVLJE III -->
+        <section id="poglavlje-3" class="scroll-mt-16 space-y-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje III</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+              Primeri dobre prakse i oživljavanje zajednice
+            </h2>
+            <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
+              Iskustva iz Srbije pokazuju da mesne zajednice nisu mrtvo slovo na papiru kada ih komšije preuzmu kao prostor za kulturu, solidarnost i direktno odlučivanje.
+            </p>
+          </div>
+
+          <!-- Case Study 1: MZ Studentski grad -->
+          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-terracotta-100 text-terracotta-600">
+                Studija slučaja 1
+              </span>
+              <span class="text-xs font-medium text-stone-500">Novi Beograd • Javni prostor</span>
+            </div>
+            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+              MZ „Studentski grad“: Otvaranje sale za komšiluk i kulturu
+            </h3>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              U okviru kampanje <strong>„Otvoreno o javnim prostorima“</strong>, udruženja građana (<em>ApsArt, Kontekst, Scena Carina</em>) potpisala su u septembru 2011. godine <strong>Protokol o poslovno-tehničkoj saradnji</strong> sa Gradskom opštinom Novi Beograd i Novobeogradskom kulturnom mrežom. Time je velika sala MZ „Studentski grad“ (87 m² u ul. Narodnih heroja 30) ustupljena bez naknade za kulturne i društvene programe zajednice.
+            </p>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              U ovom prostoru realizovano je <strong>preko 100 besplatnih programa</strong> (predstava, radionica, tribina, izložbi), a same organizacije su uložile sredstva u obnovu prostora. Nažalost, iako je ovakav model javno-civilnog partnerstva pokazao ogroman potencijal, <strong>prostor je nakon nekoliko godina zatvoren</strong> jer nadležni nisu produžili protokol o saradnji.
+            </p>
+            <div class="bg-paper border border-stone-200 rounded-xl p-4 text-xs sm:text-sm text-stone-700">
+              <strong class="text-petrol-900">Važno pravo građana:</strong> Prostorije MZ nisu stranačke kancelarije. Prema lokalnim pravilnicima (poput onog u Novom Sadu), Savet MZ može bez naknade ustupiti salu <strong>stambenim zajednicama</strong> za sastanke stanara, Crvenom krstu, udruženjima penzionera, dobrovoljnim davaocima krvi, kao i udruženjima građana za nekomercijalne aktivnosti.
+            </div>
+          </article>
+
+          <!-- Case Study 2: MZ Liman -->
+          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-petrol-100 text-petrol-900">
+                Studija slučaja 2
+              </span>
+              <span class="text-xs font-medium text-stone-500">Novi Sad • Neposredni izbori</span>
+            </div>
+            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+              MZ „Liman“: Kako su nezavisne komšije pobedile na izborima
+            </h3>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              Na izborima za savete mesnih zajednica u Novom Sadu u junu 2021. godine, samoorganizovane komšije i lokalni aktivisti kandidovali su se imenom i prezimenom i uspeli da osvoje većinu u <strong>3 od 47 gradskih mesnih zajednica</strong>, uključujući i <strong>MZ „Liman“</strong>.
+            </p>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              Ovaj primer je potvrdio da tamo gde postoje neposredni izbori, mala izlaznost i dobar komšijski rad omogućavaju građanima da preuzmu upravljanje svojom mesnom zajednicom. Kao odgovor na uspeh nezavisnih kandidata, gradska vlast je krajem 2021. izmenila odluku o MZ i ograničila pravo samim kandidatima da imaju svoje posmatrače na biračkim mestima — što pokazuje koliko je važno pratiti lokalne propise pre raspisivanja izbora.
+            </p>
+          </article>
+
+          <!-- Case Study 3: Zborovi gradjana -->
+          <article class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-terracotta-100 text-terracotta-600">
+                Studija slučaja 3
+              </span>
+              <span class="text-xs font-medium text-stone-500">Cela Srbija • Neposredno učešće</span>
+            </div>
+            <h3 class="font-serif font-bold text-2xl text-petrol-900">
+              Zborovi građana u akciji: Pozivanje Saveta MZ na polaganje računa
+            </h3>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              Tamo gde su izbori zatvoreni (kao u Beogradu) ili između dva izborna ciklusa, <strong>zborovi građana</strong> postali su najefikasniji alat za otključavanje mesnih zajednica. Kroz zborove građani zahtevaju da Savet MZ položi račun o svom radu i finansijama, izjašnjavaju se o urbanističkim planovima i donose zaključke koje Savet mora da prosledi opštini.
+            </p>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+              Čak i kada rukovodstvo mesne zajednice pokuša da ignoriše inicijativu ćutanjem ili odbijanjem da ustupi salu, sam proces prikupljanja potpisa, održavanja zbora ispred zgrade MZ i obaveštavanja javnosti stvara snažan institucionalni pritisak koji primorava lokalnu samoupravu na reakciju.
+            </p>
+          </article>
+        </section>
+
+        <hr class="border-stone-200" />
+
+        <!-- POGLAVLJE IV -->
+        <section id="poglavlje-4" class="scroll-mt-16 space-y-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Poglavlje IV</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+              Pripremni spisak i gotovi šabloni dopisa
+            </h2>
+            <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
+              Pre nego što predaš prvi zahtev, prođi kroz ovih šest pripremnih koraka i preuzmi gotov šablon dopisa prilagođen tvojoj inicijativi.
+            </p>
+          </div>
+
+          <!-- Interactive Checklist -->
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-serif font-bold text-2xl text-petrol-900">Pripremni spisak u 6 koraka</h3>
+              <button id="reset-checklist-btn" class="text-xs text-stone-500 hover:text-terracotta-600 underline">
+                Poništi izbor
+              </button>
+            </div>
+            <div id="checklist-container" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Document Templates Generator -->
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
+            <div>
+              <h3 class="font-serif font-bold text-2xl text-petrol-900">Gotovi šabloni zvaničnih dopisa</h3>
+              <p class="text-sm text-stone-600 mt-1">
+                Izaberi vrstu dopisa, popuni osnovne podatke i kopiraj tekst ili ga odštampaj u dva primerka (jedan ostaje pisarnici, drugi sa zavodnim pečatom zadržavaš ti).
+              </p>
+            </div>
+
+            <!-- Template Selector -->
+            <div class="grid sm:grid-cols-2 gap-2.5" id="template-selector">
+              <button data-tpl="sednica" class="tpl-btn text-left p-3.5 rounded-xl border-2 border-petrol-900 bg-petrol-50 transition">
+                <div class="font-semibold text-sm text-petrol-900">1. Zahtev 15 građana za sednicu Saveta</div>
+                <div class="text-xs text-stone-600 mt-0.5">Stavljanje teme na dnevni red Saveta MZ</div>
+              </button>
+              <button data-tpl="zbor" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
+                <div class="font-semibold text-sm text-petrol-900">2. Inicijativa za sazivanje Zbora građana</div>
+                <div class="text-xs text-stone-600 mt-0.5">Poziv na odlučivanje uz zakonski rok od 60 dana</div>
+              </button>
+              <button data-tpl="sala" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
+                <div class="font-semibold text-sm text-petrol-900">3. Zahtev za korišćenje sale MZ</div>
+                <div class="text-xs text-stone-600 mt-0.5">Za stambenu zajednicu, tribinu ili radionicu</div>
+              </button>
+              <button data-tpl="uvid" class="tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition">
+                <div class="font-semibold text-sm text-petrol-900">4. Zahtev za uvid u Statut i zapisnike</div>
+                <div class="text-xs text-stone-600 mt-0.5">Provera pravila rada, kvoruma i izveštaja</div>
+              </button>
+            </div>
+
+            <!-- Quick Fill Inputs -->
+            <div class="grid sm:grid-cols-3 gap-3 bg-paper p-4 rounded-xl border border-stone-200">
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Naziv Mesne zajednice</label>
+                <input id="inp-mz" type="text" placeholder="npr. MZ Studentski grad" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Opština / Grad</label>
+                <input id="inp-opstina" type="text" placeholder="npr. Novi Beograd" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-stone-700 mb-1">Tema / Predmet inicijative</label>
+                <input id="inp-tema" type="text" placeholder="npr. Javna rasprava o planu parka" class="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-hidden focus:border-terracotta-500" />
+              </div>
+            </div>
+
+            <!-- Document Preview -->
+            <div id="print-area" class="bg-white border border-stone-300 rounded-xl p-6 sm:p-8 font-serif text-sm sm:text-base text-ink leading-relaxed whitespace-pre-line shadow-inner"></div>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap items-center gap-3">
+              <button id="copy-doc-btn" class="px-5 py-2.5 rounded-xl bg-petrol-900 hover:bg-petrol-800 text-white text-sm font-semibold transition cursor-pointer">
+                Kopiraj tekst dopisa
+              </button>
+              <button onclick="window.print()" class="px-5 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-petrol-900 text-sm font-semibold transition cursor-pointer">
+                Odštampaj / Sačuvaj kao PDF
+              </button>
+              <span id="copy-feedback" class="text-xs font-semibold text-terracotta-600 hidden">
+                Tekst je kopiran u privremenu memoriju!
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-stone-200" />
+
+        <!-- ZAVRŠNE PREPORUKE -->
+        <section id="preporuke" class="scroll-mt-16 space-y-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Završne preporuke</span>
+            <h2 class="font-serif font-bold text-3xl sm:text-4xl text-petrol-900 mt-1">
+              Tri stuba za trajno oživljavanje mesnih zajednica
+            </h2>
+            <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
+              Da bi mesne zajednice izašle iz administrativnog zapećka i postale stvarni prostor dogovora komšija, potrebne su promene u tri paralelna pravca:
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-5">
+            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">01</div>
+                <h3 class="font-serif font-bold text-xl mb-3">Informisanje i javnost rada</h3>
+                <p class="text-sm text-petrol-100 leading-relaxed">
+                  Uspostavljanje javnog registra svih mesnih zajednica na sajtu opštine, redovno ažuriranje oglasnih tabli, objavljivanje zapisnika sa sednica i obavezna godišnja javna prezentacija programa rada i finansijskog izveštaja pred građanima.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">02</div>
+                <h3 class="font-serif font-bold text-xl mb-3">Obavezno konsultovanje</h3>
+                <p class="text-sm text-petrol-100 leading-relaxed">
+                  Izmena lokalnih pravilnika tako da se svi urbanistički planovi, infrastrukturni projekti i nacrti opštinskih budžeta obavezno predstavljaju na javnim raspravama u mesnim zajednicama na čijoj se teritoriji sprovode.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-petrol-900 text-white rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div class="text-terracotta-500 font-serif font-bold text-3xl mb-2">03</div>
+                <h3 class="font-serif font-bold text-xl mb-3">Lakše neposredno učešće</h3>
+                <p class="text-sm text-petrol-100 leading-relaxed">
+                  Spuštanje zakonskog praga za pokretanje građanske inicijative na 3% do 5% birača, ukidanje birokratskih prepreka za nezavisne kandidate na izborima i jačanje finansijske autonomije i participativnog budžetiranja.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- KONTAKT / IMPRESUM & IZVORI -->
+        <footer id="impresum" class="scroll-mt-16 pt-10 border-t border-stone-300 space-y-8 pb-12">
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Kontakt / Impresum</span>
+              <h3 class="font-serif font-bold text-2xl text-petrol-900 mt-1">Dobrica Veselinović</h3>
+              <p class="text-sm text-stone-600 mt-1">
+                Za pitanja, predloge, iskustva iz tvoje mesne zajednice i dopunu ovog vodiča:
+              </p>
+            </div>
+            <a
+              href="mailto:dobrica.veselinovic@gmail.com"
+              class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white text-sm font-semibold transition shrink-0"
+            >
+              dobrica.veselinovic@gmail.com
+            </a>
+          </div>
+
+          <div class="text-xs text-stone-500 space-y-2 leading-relaxed">
+            <div class="font-semibold text-stone-700">Korišćeni izvori i literatura:</div>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>Dobrica Veselinović, <em>„Mesna zajednica: mesto ili zajednica?“</em>, Mikro art / Ministarstvo prostora, Beograd.</li>
+              <li>Ozren Lazić i Dragoljub Perković, <em>„Kratak vodič kroz mesne zajednice“</em>, Ministarstvo prostora / Institut za urbane politike, Beograd, 2023.</li>
+              <li>Mladen Ostojić, <em>„Zašto su nam potrebne mesne zajednice“</em>, portal Mašina.</li>
+              <li>Zakon o lokalnoj samoupravi Republike Srbije i Zakon o glavnom gradu.</li>
+            </ul>
+          </div>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // 1. Mobile Navigation Drawer
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeDrawerBtn = document.getElementById('close-drawer-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    mobileMenuBtn.addEventListener('click', () => mobileDrawer.classList.remove('hidden'));
+    closeDrawerBtn.addEventListener('click', () => mobileDrawer.classList.add('hidden'));
+    mobileDrawer.addEventListener('click', (e) => {
+      if (e.target === mobileDrawer) mobileDrawer.classList.add('hidden');
+    });
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => mobileDrawer.classList.add('hidden'));
+    });
+
+    // 2. Scrollspy for Desktop TOC
+    const sections = document.querySelectorAll('section[id], footer[id]');
+    const tocLinks = document.querySelectorAll('.toc-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop - 140;
+        if (window.scrollY >= top) {
+          current = sec.getAttribute('id');
+        }
+      });
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // 3. Four Models of Neighbourhood Governance (Lowndes & Sullivan)
+    const governanceModels = [
+      {
+        title: 'Osnaživanje lokalne zajednice',
+        purpose: 'Građanska',
+        goal: 'Aktivni građani i međusobno povezane zajednice',
+        democracy: 'Participativna demokratija',
+        citizenRole: 'Građanin: ima reč i direktno odlučuje',
+        framework: 'Zborovi građana, forumi, koperative i zadruge'
+      },
+      {
+        title: 'Partnerstvo u lokalnoj zajednici',
+        purpose: 'Društvena',
+        goal: 'Društveni prosperitet i zajednička obnova prostora',
+        democracy: 'Demokratija zainteresovanih strana',
+        citizenRole: 'Partner: saradnja i solidarnost',
+        framework: 'Odbori za javne usluge, javno-civilna partnerstva'
+      },
+      {
+        title: 'Vlast u lokalnoj zajednici',
+        purpose: 'Politička',
+        goal: 'Odgovorno donošenje odluka u ime građana',
+        democracy: 'Predstavnička demokratija',
+        citizenRole: 'Glasač: daje glas na izborima',
+        framework: 'Gradska veća, skupštine opština, mesni odbori'
+      },
+      {
+        title: 'Upravljanje lokalnom zajednicom',
+        purpose: 'Ekonomska',
+        goal: 'Efektivnije i jeftinije pružanje komunalnih usluga',
+        democracy: 'Tržišna demokratija',
+        citizenRole: 'Potrošač: bira ponuđača usluge',
+        framework: 'Komercijalni ugovori, javno-privatni sporazumi'
+      }
+    ];
+
+    const modelBtns = document.querySelectorAll('.model-tab-btn');
+    const modelDisplay = document.getElementById('model-display');
+
+    function renderModel(idx) {
+      const m = governanceModels[idx];
+      modelDisplay.innerHTML = `
+        <div>
+          <div class="text-xs text-stone-500 uppercase font-semibold">Primarna svrha</div>
+          <div class="font-bold text-petrol-900 text-base mt-0.5">${m.purpose}</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-500 uppercase font-semibold">Tip demokratije</div>
+          <div class="font-bold text-terracotta-600 text-base mt-0.5">${m.democracy}</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-500 uppercase font-semibold">Uloga građana</div>
+          <div class="font-semibold text-ink text-sm mt-0.5">${m.citizenRole}</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-500 uppercase font-semibold">Institucionalni okvir</div>
+          <div class="font-semibold text-ink text-sm mt-0.5">${m.framework}</div>
+        </div>
+        <div class="sm:col-span-2 pt-2 border-t border-stone-100">
+          <div class="text-xs text-stone-500 uppercase font-semibold">Glavni cilj</div>
+          <div class="text-sm text-stone-700 mt-0.5">${m.goal}</div>
+        </div>
+      `;
+    }
+
+    modelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modelBtns.forEach(b => {
+          b.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-white text-petrol-900 border border-stone-200 hover:bg-stone-50';
+        });
+        btn.className = 'model-tab-btn px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-left transition bg-petrol-900 text-white shadow-2xs';
+        renderModel(Number(btn.dataset.model));
+      });
+    });
+    renderModel(0);
+
+    // 4. Beograd vs Srbija Switcher
+    const btnSrbija = document.getElementById('btn-srbija');
+    const btnBeograd = document.getElementById('btn-beograd');
+    const jurisdictionContent = document.getElementById('jurisdiction-content');
+
+    const jurisdictionData = {
+      srbija: `
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-petrol-50 border border-petrol-100">
+            <div class="text-xs font-bold uppercase text-petrol-700 mb-1">Zakon o lokalnoj samoupravi</div>
+            <div class="font-bold text-petrol-900 text-base mb-1">Neposredni izbori za Savet MZ</div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+              Građani direktno i tajno glasaju za svoje komšije imenom i prezimenom na svake 4 godine. Svaki punoletni stanovnik te MZ može da se kandiduje uz prikupljanje potpisa podrške komšija.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-paper border border-stone-200">
+            <div class="text-xs font-bold uppercase text-terracotta-600 mb-1">Tvoja glavna poluga</div>
+            <div class="font-bold text-petrol-900 text-base mb-1">Kandidatura + Zborovi građana</div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+              Zbog tradicionalno niske izlaznosti (10–20%), organizovana grupa komšija može direktno ući u Savet MZ. Između izbora koriste se Zborovi građana i sednice Saveta na zahtev 15 građana.
+            </p>
+          </div>
+        </div>
+      `,
+      beograd: `
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-terracotta-50 border border-terracotta-100">
+            <div class="text-xs font-bold uppercase text-terracotta-600 mb-1">Zakon o glavnom gradu</div>
+            <div class="font-bold text-petrol-900 text-base mb-1">Posredan (skupštinski) izbor Saveta</div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+              Beograđani ne glasaju direktno za članove Saveta MZ. Članove Saveta imenuje većina odbornika u Skupštini gradske opštine na osnovu odluke o osnivanju MZ.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-paper border border-stone-200">
+            <div class="text-xs font-bold uppercase text-petrol-700 mb-1">Tvoja glavna poluga</div>
+            <div class="font-bold text-petrol-900 text-base mb-1">Zbor građana i pisani zahtevi</div>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+              Iako nema neposrednih izbora, Savet MZ u Beogradu je po zakonu dužan da sazove Zbor građana na inicijativu stanovnika i da prosledi zahteve opštini ili Gradu Beogradu (rok za odgovor: 60 dana).
+            </p>
+          </div>
+        </div>
+      `
+    };
+
+    function setJurisdiction(mode) {
+      if (mode === 'srbija') {
+        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white';
+        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900';
+      } else {
+        btnBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-petrol-900 text-white';
+        btnSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-petrol-900';
+      }
+      jurisdictionContent.innerHTML = jurisdictionData[mode];
+    }
+
+    btnSrbija.addEventListener('click', () => setJurisdiction('srbija'));
+    btnBeograd.addEventListener('click', () => setJurisdiction('beograd'));
+    setJurisdiction('srbija');
+
+    // 5. Signature Calculator
+    const votersInput = document.getElementById('voters-input');
+    const calcZbor = document.getElementById('calc-zbor');
+    const calcInicijativa = document.getElementById('calc-inicijativa');
+    const calcReferendum = document.getElementById('calc-referendum');
+
+    function updateCalculator() {
+      const val = Math.max(50, parseInt(votersInput.value) || 0);
+      const p5 = Math.ceil(val * 0.05);
+      const p10 = Math.ceil(val * 0.10);
+      calcZbor.textContent = `~${p10.toLocaleString('sr-RS')} birača (10%)`;
+      calcInicijativa.textContent = `${p5.toLocaleString('sr-RS')} birača (5%)`;
+      calcReferendum.textContent = `${p10.toLocaleString('sr-RS')} birača (10%)`;
+    }
+
+    votersInput.addEventListener('input', updateCalculator);
+    updateCalculator();
+
+    // 6. Interactive Checklist with localStorage
+    const checklistItems = [
+      { id: 'c1', title: 'Pronađi tačan naziv, adresu i radno vreme svoje MZ', desc: 'Proveri na sajtu opštine/grada kojoj mesnoj zajednici pripada tvoja ulica.' },
+      { id: 'c2', title: 'Zatraži Statut MZ i Odluku o mesnim zajednicama', desc: 'U njima pišu tačni pragovi potpisa za Zbor građana, broj članova Saveta i uslovi za kandidovanje.' },
+      { id: 'c3', title: 'Proveri ko su članovi Saveta MZ i kada ističe mandat', desc: 'Rad Saveta je po zakonu javan, a imena članova i zapisnici moraju biti dostupni građanima.' },
+      { id: 'c4', title: 'Okupi najmanje 15 komšija sa prebivalištem u istoj MZ', desc: 'Sa 15 potpisa već možeš formalno da zahtevaš sazivanje sednice Saveta MZ.' },
+      { id: 'c5', title: 'Proveri stanje i dostupnost sale mesne zajednice', desc: 'Sala MZ može se koristiti za sastanak komšija, tribinu ili zbor građana.' },
+      { id: 'c6', title: 'Svaki dopis predaj u dva primerka na pisarnici', desc: 'Obavezno zadrži svoj primerak sa datumom prijema i zavodnim pečatom kao dokaz za rok od 60 dana.' }
+    ];
+
+    const checklistContainer = document.getElementById('checklist-container');
+    const progressText = document.getElementById('sidebar-progress-text');
+    const progressBar = document.getElementById('sidebar-progress-bar');
+    const resetBtn = document.getElementById('reset-checklist-btn');
+
+    let savedChecks = JSON.parse(localStorage.getItem('mz101_checks') || '{}');
+
+    function renderChecklist() {
+      let checkedCount = 0;
+      checklistContainer.innerHTML = checklistItems.map(item => {
+        const isChecked = !!savedChecks[item.id];
+        if (isChecked) checkedCount++;
+        return `
+          <label class="flex items-start gap-3.5 p-3.5 rounded-xl border ${isChecked ? 'bg-petrol-50/70 border-petrol-200' : 'bg-paper/40 border-stone-200'} cursor-pointer hover:border-petrol-700 transition">
+            <input type="checkbox" data-id="${item.id}" ${isChecked ? 'checked' : ''} class="mt-1 h-4 w-4 rounded border-stone-300 text-terracotta-500 focus:ring-terracotta-500" />
+            <div>
+              <div class="text-sm font-semibold ${isChecked ? 'line-through text-stone-500' : 'text-petrol-900'}">${item.title}</div>
+              <div class="text-xs text-stone-600 mt-0.5">${item.desc}</div>
+            </div>
+          </label>
+        `;
+      }).join('');
+
+      progressText.textContent = `${checkedCount} / ${checklistItems.length}`;
+      progressBar.style.width = `${Math.round((checkedCount / checklistItems.length) * 100)}%`;
+
+      checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          savedChecks[e.target.dataset.id] = e.target.checked;
+          localStorage.setItem('mz101_checks', JSON.stringify(savedChecks));
+          renderChecklist();
+        });
+      });
+    }
+
+    resetBtn.addEventListener('click', () => {
+      savedChecks = {};
+      localStorage.removeItem('mz101_checks');
+      renderChecklist();
+    });
+    renderChecklist();
+
+    // 7. Document Templates Generator
+    const tplBtns = document.querySelectorAll('.tpl-btn');
+    const inpMz = document.getElementById('inp-mz');
+    const inpOpstina = document.getElementById('inp-opstina');
+    const inpTema = document.getElementById('inp-tema');
+    const printArea = document.getElementById('print-area');
+    const copyDocBtn = document.getElementById('copy-doc-btn');
+    const copyFeedback = document.getElementById('copy-feedback');
+
+    let currentTpl = 'sednica';
+
+    function generateDocText() {
+      const mz = inpMz.value.trim() || '[Naziv mesne zajednice]';
+      const opstina = inpOpstina.value.trim() || '[Naziv opštine / grada]';
+      const tema = inpTema.value.trim() || '[Kratak opis teme / inicijative]';
+      const today = new Date().toLocaleDateString('sr-RS');
+
+      const templates = {
+        sednica: `SAVETU MESNE ZAJEDNICE „${mz.toUpperCase()}“
+Opština / Grad: ${opstina}
+
+PREDMET: Zahtev grupe građana za sazivanje sednice Saveta mesne zajednice
+
+Poštovani,
+
+Na osnovu Zakona o lokalnoj samoupravi i Statuta Mesne zajednice „${mz}“, dole potpisani građani sa prebivalištem na teritoriji ove mesne zajednice podnose zahtev za sazivanje sednice Saveta mesne zajednice sa sledećom tačkom dnevnog reda:
+
+1. Razmatranje inicijative: ${tema}
+
+Molimo da nas pismeno obavestite o datumu i vremenu održavanja sednice kako bismo kao podnosioci zahteva mogli da prisustvujemo sednici u skladu sa načelom javnosti rada Saveta.
+
+Prilog: Spisak sa imenima, prezimenima, adresama i potpisima najmanje 15 građana sa teritorije MZ.
+
+U ${opstina}, dana ${today}. godine
+
+Podnosioci zahteva (kontakt osoba):
+Ime i prezime: ___________________________
+Adresa i telefon: _________________________`,
+
+        zbor: `SAVETU MESNE ZAJEDNICE „${mz.toUpperCase()}“
+Predsedniku Skupštine opštine / grada ${opstina}
+
+PREDMET: Inicijativa za sazivanje Zbora građana
+
+Poštovani,
+
+Na osnovu Zakona o lokalnoj samoupravi, Statuta opštine/grada ${opstina} i Statuta Mesne zajednice „${mz}“, podnosimo inicijativu za sazivanje Zbora građana za područje ove mesne zajednice.
+
+Predloženi dnevni red Zbora građana:
+1. Rasprava i izjašnjavanje građana o temi: ${tema}
+2. Donošenje zaključaka i upućivanje zahteva nadležnim organima lokalne samouprave
+
+Podsećamo da su nadležni organi i službe jedinice lokalne samouprave dužni da u zakonskom roku od 60 dana od dana održavanja Zbora građana razmotre usvojene zahteve i predloge, zauzmu stav i o tome obaveste građane.
+
+Prilog: Potpisi podrške građana sa teritorije MZ „${mz}“.
+
+U ${opstina}, dana ${today}. godine
+
+Inicijativni odbor građana:
+Ime i prezime: ___________________________
+Kontakt telefon / e-mail: __________________`,
+
+        sala: `SAVETU MESNE ZAJEDNICE „${mz.toUpperCase()}“
+Opština / Grad: ${opstina}
+
+PREDMET: Zahtev za korišćenje prostorija (sale) mesne zajednice
+
+Poštovani,
+
+Obraćamo Vam se sa molbom da nam, u skladu sa Odlukom o mesnim zajednicama i pravilnikom o korišćenju poslovnog prostora, odobrite korišćenje sale Mesne zajednice „${mz}“ bez naknade radi održavanja nekomercijalne aktivnosti od interesa za lokalnu zajednicu.
+
+Podaci o aktivnosti:
+• Naziv / tema događaja: ${tema}
+• Predloženi datum i vreme: ______________________
+• Organizator (stambena zajednica / udruženje / grupa građana): ______________________
+
+Obavezujemo se da ćemo prostor koristiti sa pažnjom dobrog domaćina i nakon završetka aktivnosti ostaviti ga u urednom stanju.
+
+U ${opstina}, dana ${today}. godine
+
+Podnosilac zahteva:
+Ime i prezime: ___________________________
+Kontakt telefon / e-mail: __________________`,
+
+        uvid: `MESNOJ ZAJEDNICI „${mz.toUpperCase()}“
+Opština / Grad: ${opstina}
+
+PREDMET: Zahtev za uvid i dostavljanje kopija dokumenata od javnog značaja
+
+Poštovani,
+
+Na osnovu Zakona o slobodnom pristupu informacijama od javnog značaja i odredbi o javnosti rada mesne zajednice, molim Vas da mi u elektronskom obliku (putem e-maila) ili neposrednim uvidom dostavite kopije sledećih dokumenata:
+
+1. Važeći Statut Mesne zajednice „${mz}“;
+2. Poslovnik o radu Saveta mesne zajednice;
+3. Zapisnike sa održanih sednica Saveta MZ u poslednjih 12 meseci;
+4. Godišnji program rada i finansijski izveštaj mesne zajednice (uključujući podatke vezane za: ${tema}).
+
+Molim da tražene informacije dostavite u zakonskom roku od 15 dana na dole navedenu adresu elektronske pošte.
+
+U ${opstina}, dana ${today}. godine
+
+Podnosilac zahteva:
+Ime i prezime: ___________________________
+E-mail adresa: ___________________________`
+      };
+
+      printArea.textContent = templates[currentTpl];
+    }
+
+    tplBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tplBtns.forEach(b => {
+          b.className = 'tpl-btn text-left p-3.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 transition';
+        });
+        btn.className = 'tpl-btn text-left p-3.5 rounded-xl border-2 border-petrol-900 bg-petrol-50 transition';
+        currentTpl = btn.dataset.tpl;
+        generateDocText();
+      });
+    });
+
+    [inpMz, inpOpstina, inpTema].forEach(inp => inp.addEventListener('input', generateDocText));
+    generateDocText();
+
+    copyDocBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(printArea.textContent).then(() => {
+        copyFeedback.classList.remove('hidden');
+        setTimeout(() => copyFeedback.classList.add('hidden'), 2500);
+      });
+    });
+  </script>
+</body>
+</html>
