@@ -162,8 +162,8 @@
           <a href="#poglavlje-3" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">III. Primeri dobre prakse</a>
           <a href="#poglavlje-4" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">IV. Pripremni spisak i šabloni</a>
           <a href="#preporuke" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Preporuke za oživljavanje</a>
-          <a href="#dodatak-bg" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Dodatak: Beogradske MZ</a>
-          <a href="#impresum" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Kontakt / Impresum</a>
+          <a href="#dodatak-bg" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Dodatak: Mapa i adresar MZ</a>
+          <a href="#kontakt" class="mobile-nav-link block py-1 text-stone-700 hover:text-terracotta-500">Kontakt</a>
         </nav>
       </div>
       <div class="text-xs text-muted border-t border-forest-100 pt-4">
@@ -209,10 +209,10 @@
               Preporuke za oživljavanje
             </a>
             <a href="#dodatak-bg" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
-              Dodatak: Beogradske MZ
+              Dodatak: Mapa i adresar MZ
             </a>
-            <a href="#impresum" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
-              Kontakt / Impresum
+            <a href="#kontakt" class="toc-link block pl-3 py-1.5 border-l-2 border-forest-100 text-muted hover:text-forest-900 transition">
+              Kontakt
             </a>
           </nav>
 
@@ -714,20 +714,37 @@
 
         <hr class="border-forest-100" />
 
-        <!-- DODATAK: SPISAK BEOGRADSKIH MESNIH ZAJEDNICA -->
+        <!-- DODATAK: MAPA I ADRESAR MESNIH ZAJEDNICA (BEOGRAD VS SRBIJA) -->
         <section id="dodatak-bg" class="scroll-mt-16 space-y-6">
           <div>
             <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Dodatak</span>
             <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest-900 mt-1">
-              Spisak i mapa beogradskih mesnih zajednica
+              Mapa i adresar mesnih zajednica
             </h2>
             <p class="mt-3 text-stone-700 text-base sm:text-lg leading-relaxed">
-              Istraži beogradske mesne zajednice na interaktivnoj mapi ili ih pretraži po opštini i imenu. Klikom na marker na mapi ili na naziv MZ u spisku možeš direktno da popuniš generator zvaničnih dopisa u Poglavlju IV.
+              Istraži mesne zajednice u Beogradu ili širom Srbije na interaktivnoj OpenStreetMap mapi, pretraži ih po gradu, opštini, imenu ili ulici i jednim klikom popuni zvanični dopis u Poglavlju IV.
             </p>
           </div>
 
-          <!-- Pretraga i filteri po opštinama -->
-          <div class="bg-white border border-forest-100 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+          <!-- Prekidač Beograd / Ostatak Srbije, pretraga i filteri -->
+          <div class="bg-white border border-forest-100 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-forest-100">
+              <div>
+                <h3 class="font-serif font-bold text-2xl text-forest-900">Izaberi područje prikaza</h3>
+                <p id="dodatak-region-desc" class="text-sm text-stone-600 mt-1">
+                  Pregled svih 121 mesnih zajednica u 8 gradskih opština Beograda.
+                </p>
+              </div>
+              <div class="inline-flex rounded-xl bg-forest-50 p-1 self-start border border-forest-100">
+                <button type="button" id="btn-dodatak-beograd" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white cursor-pointer">
+                  Grad Beograd (121 MZ)
+                </button>
+                <button type="button" id="btn-dodatak-srbija" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900 cursor-pointer">
+                  Ostatak Srbije
+                </button>
+              </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
                 <input
@@ -746,16 +763,47 @@
               <!-- Populated by JS -->
             </div>
 
-            <p class="text-[11px] text-muted bg-paper border border-forest-100 rounded-lg px-3 py-2">
+            <div id="dodatak-region-note" class="text-[11px] text-muted bg-paper border border-forest-100 rounded-lg px-3 py-2">
               <strong class="text-forest-900">Napomena o adresama:</strong> Prikazane adrese sedišta mesnih zajednica prikupljene su iz javno dostupnih opštinskih imenika i evidencija. Pre slanja zvanične pošte preporučujemo da proveriš aktuelnu adresu i radno vreme pisarnice na zvaničnoj internet prezentaciji svoje gradske opštine.
-            </p>
+            </div>
+
+            <!-- Brzi unos za bilo koji grad ili opštinu u Srbiji (vidljivo u tabu Ostatak Srbije) -->
+            <div id="custom-serbia-mz-box" class="hidden bg-forest-50 border border-forest-200 rounded-xl p-4 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <div class="text-xs font-bold uppercase tracking-wider text-forest-900">
+                  Nisi u Beogradu? Unesi svoj grad / opštinu i mesnu zajednicu
+                </div>
+                <span class="text-[11px] text-forest-700 font-medium">Preko 4.000 MZ u 145+ gradova i opština</span>
+              </div>
+              <div class="grid sm:grid-cols-3 gap-2.5">
+                <input
+                  type="text"
+                  id="custom-srb-city"
+                  placeholder="Grad ili opština (npr. Valjevo, Pirot, Bačka Palanka...)"
+                  class="px-3 py-2 text-xs sm:text-sm bg-white border border-forest-200 rounded-lg text-forest-900 focus:outline-hidden focus:border-terracotta-500"
+                />
+                <input
+                  type="text"
+                  id="custom-srb-mz"
+                  placeholder="Naziv MZ (npr. MZ Gradac, MZ Tijabara...)"
+                  class="px-3 py-2 text-xs sm:text-sm bg-white border border-forest-200 rounded-lg text-forest-900 focus:outline-hidden focus:border-terracotta-500"
+                />
+                <button
+                  type="button"
+                  id="custom-srb-fill-btn"
+                  class="px-4 py-2 rounded-lg bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
+                >
+                  Popuni dopis u Poglavlju IV &rarr;
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Interaktivna mapa beogradskih MZ -->
+          <!-- Interaktivna OpenStreetMap mapa -->
           <div class="bg-white border border-forest-100 rounded-2xl p-3 sm:p-4 shadow-2xs space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2 px-1">
-              <div class="text-xs font-semibold text-forest-900">
-                OpenStreetMap prikaz mesnih zajednica po gradskim opštinama
+              <div id="map-header-title" class="text-xs font-semibold text-forest-900">
+                OpenStreetMap prikaz mesnih zajednica po gradskim opštinama Beograda
               </div>
               <button
                 type="button"
@@ -766,24 +814,24 @@
               </button>
             </div>
             <div class="rounded-xl overflow-hidden border border-forest-100">
-              <div id="bg-mz-map" aria-label="OpenStreetMap mapa beogradskih mesnih zajednica"></div>
+              <div id="bg-mz-map" aria-label="OpenStreetMap mapa mesnih zajednica"></div>
             </div>
             <div id="bg-mz-legend" class="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-1 pt-1 text-[11px] text-muted">
               <!-- Populated by JS -->
             </div>
           </div>
 
-          <!-- Kartice po opštinama -->
+          <!-- Kartice po opštinama / gradovima -->
           <div id="bg-mz-list" class="grid sm:grid-cols-2 gap-4">
             <!-- Populated by JS -->
           </div>
         </section>
 
-        <!-- KONTAKT / IMPRESUM & IZVORI -->
-        <footer id="impresum" class="scroll-mt-16 pt-10 border-t border-forest-100 space-y-8 pb-12">
+        <!-- KONTAKT -->
+        <footer id="kontakt" class="scroll-mt-16 pt-10 border-t border-forest-100 pb-12">
           <div class="bg-white border border-forest-100 rounded-2xl p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Kontakt / Impresum</span>
+              <span class="text-xs font-bold uppercase tracking-widest text-terracotta-600">Kontakt</span>
               <h3 class="font-serif font-bold text-2xl text-forest-900 mt-1">Dobrica Veselinović</h3>
               <p class="text-sm text-stone-600 mt-1">
                 Za pitanja, predloge, iskustva iz tvoje mesne zajednice i dopunu ovog vodiča:
@@ -795,16 +843,6 @@
             >
               dobrica.veselinovic@gmail.com
             </a>
-          </div>
-
-          <div class="text-xs text-muted space-y-2 leading-relaxed">
-            <div class="font-semibold text-forest-900">Korišćeni izvori i literatura:</div>
-            <ul class="list-disc pl-5 space-y-1">
-              <li>Dobrica Veselinović, <em>„Mesna zajednica: mesto ili zajednica?“</em>, Mikro art / Ministarstvo prostora, Beograd.</li>
-              <li>Ozren Lazić i Dragoljub Perković, <em>„Kratak vodič kroz mesne zajednice“</em>, Ministarstvo prostora / Institut za urbane politike, Beograd, 2023.</li>
-              <li>Mladen Ostojić, <em>„Zašto su nam potrebne mesne zajednice“</em>, portal Mašina.</li>
-              <li>Zakon o lokalnoj samoupravi Republike Srbije i Zakon o glavnom gradu.</li>
-            </ul>
           </div>
         </footer>
 
@@ -1379,25 +1417,104 @@ E-mail adresa: ___________________________`
       }
     ];
 
+    const serbiaMZs = [
+      {
+        municipality: 'AP Vojvodina (8 gradova)',
+        short: 'Vojvodina',
+        color: '#163A2C',
+        note: 'U svim gradovima i opštinama Vojvodine izbori za Savet MZ su neposredni (građani glasaju imenom i prezimenom). Kompletan spisak MZ i adresa nalazi se na zvaničnom sajtu svakog grada.',
+        items: [
+          { name: 'Grad Novi Sad', address: '47 mesnih zajednica (npr. MZ Liman, MZ Narodnih heroja, MZ Petrovaradin)', coords: [45.2551, 19.8452] },
+          { name: 'Grad Subotica', address: '37 mesnih zajednica (npr. MZ Centar I, MZ Prozivka, MZ Palić)', coords: [46.1005, 19.6651] },
+          { name: 'Grad Zrenjanin', address: '36 mesnih zajednica (npr. MZ Mala Amerika, MZ Dositej Obradović, MZ Zeleno polje)', coords: [45.3814, 20.3861] },
+          { name: 'Grad Pančevo', address: '17 mesnih zajednica (npr. MZ Gornji grad, MZ Strelište, MZ Tesla)', coords: [44.8708, 20.6403] },
+          { name: 'Grad Sombor', address: '22 mesne zajednice (npr. MZ Venac, MZ Crvenka, MZ Gornja Varoš)', coords: [45.7733, 19.1151] },
+          { name: 'Grad Sremska Mitrovica', address: '31 mesna zajednica (npr. MZ Centar, MZ Blok B, MZ Laćarak)', coords: [44.9764, 19.6122] },
+          { name: 'Grad Kikinda', address: '14 mesnih zajednica (npr. MZ Braća Laković, MZ Lidija Aldan, MZ Mokrin)', coords: [45.8273, 20.4615] },
+          { name: 'Grad Vršac', address: '29 mesnih zajednica (npr. MZ Žarko Zrenjanin, MZ Gudurica, MZ Pavliš)', coords: [45.1167, 21.3036] }
+        ]
+      },
+      {
+        municipality: 'Šumadija i Zapadna Srbija (10 gradova)',
+        short: 'Šumadija i Zapadna Srbija',
+        color: '#235842',
+        note: 'U Srbiji van Beograda postoji preko 4.000 mesnih zajednica u više od 145 gradova i opština. Svaki grad uređuje broj i teritoriju svojih MZ posebnom odlukom.',
+        items: [
+          { name: 'Grad Kragujevac', address: '78 mesnih zajednica (npr. MZ Pivara, MZ Erdoglija, MZ Aerodrom, MZ Centar)', coords: [44.0128, 20.9114] },
+          { name: 'Grad Čačak', address: '68 mesnih zajednica (npr. MZ Alvadžinica, MZ Ljubić, MZ Stari grad)', coords: [43.8914, 20.3497] },
+          { name: 'Grad Kraljevo', address: '68 mesnih zajednica (npr. MZ Centar, MZ Ribnica, MZ Zelengora)', coords: [43.7258, 20.6896] },
+          { name: 'Grad Kruševac', address: '54 mesne zajednice (npr. MZ Lazarica, MZ Rasadnik, MZ Bagdala)', coords: [43.5800, 21.3339] },
+          { name: 'Grad Užice', address: '31 mesna zajednica (npr. MZ Carina, MZ Krčagovo, MZ Terazije)', coords: [43.8556, 19.8425] },
+          { name: 'Grad Šabac', address: '60 mesnih zajednica (npr. MZ Bair, MZ Kamenjak, MZ Donji Šor)', coords: [44.7489, 19.6908] },
+          { name: 'Grad Valjevo', address: '49 mesnih zajednica (npr. MZ Gradac, MZ Brđani, MZ Novo naselje)', coords: [44.2751, 19.8982] },
+          { name: 'Grad Jagodina', address: '54 mesne zajednice (npr. MZ Levač, MZ Pivara, MZ Centar)', coords: [43.9771, 21.2612] },
+          { name: 'Grad Novi Pazar', address: '26 mesnih zajednica (npr. MZ Stari grad, MZ Lug, MZ Parice)', coords: [43.1367, 20.5122] },
+          { name: 'Grad Loznica', address: '56 mesnih zajednica (npr. MZ Podrinje, MZ Klupci, MZ Banja Koviljača)', coords: [44.5333, 19.2258] }
+        ]
+      },
+      {
+        municipality: 'Južna i Istočna Srbija (9 gradova)',
+        short: 'Južna i Istočna Srbija',
+        color: '#C85A32',
+        items: [
+          { name: 'Grad Niš', address: '5 gradskih opština i više od 90 MZ (npr. MZ Božidar Adžija, MZ Mediana, MZ Durlan)', coords: [43.3209, 21.8958] },
+          { name: 'Grad Leskovac', address: '139 mesnih zajednica (npr. MZ Veljko Vlahović, MZ Hisar, MZ Dubočica)', coords: [42.9981, 21.9461] },
+          { name: 'Grad Smederevo', address: '38 mesnih zajednica (npr. MZ Slavija, MZ Leštar, MZ Carina)', coords: [44.6628, 20.9300] },
+          { name: 'Grad Požarevac', address: '38 mesnih zajednica (npr. MZ Čačalica, MZ Bulevar, MZ Kostolac)', coords: [44.6213, 21.1878] },
+          { name: 'Grad Vranje', address: '52 mesne zajednice (npr. MZ Odžinka, MZ Češalj, MZ Vranjska Banja)', coords: [42.5514, 21.9003] },
+          { name: 'Grad Zaječar', address: '48 mesnih zajednica (npr. MZ Timok, MZ Kraljevica, MZ Kotlujevac)', coords: [43.9036, 22.2641] },
+          { name: 'Grad Bor', address: '26 mesnih zajednica (npr. MZ Stari centar, MZ Novi centar, MZ Brezonik)', coords: [44.0749, 22.0959] },
+          { name: 'Grad Pirot', address: '81 mesna zajednica (npr. MZ Tijabara, MZ Pazar, MZ Tanasko Rajić)', coords: [43.1531, 22.5861] },
+          { name: 'Grad Prokuplje', address: '65 mesnih zajednica (npr. MZ Carina, MZ Garić, MZ Tatko)', coords: [43.2342, 21.5881] }
+        ]
+      },
+      {
+        municipality: 'AP Kosovo i Metohija (1 grad)',
+        short: 'Kosovo i Metohija',
+        color: '#8C3B1E',
+        items: [
+          { name: 'Grad Priština', address: 'Status zakonskog grada po Zakonu o teritorijalnoj organizaciji RS', coords: [42.6629, 21.1655] }
+        ]
+      }
+    ];
+
+    const btnDodatakBeograd = document.getElementById('btn-dodatak-beograd');
+    const btnDodatakSrbija = document.getElementById('btn-dodatak-srbija');
+    const dodatakRegionDesc = document.getElementById('dodatak-region-desc');
+    const dodatakRegionNote = document.getElementById('dodatak-region-note');
+    const customSerbiaMzBox = document.getElementById('custom-serbia-mz-box');
+    const customSrbCity = document.getElementById('custom-srb-city');
+    const customSrbMz = document.getElementById('custom-srb-mz');
+    const customSrbFillBtn = document.getElementById('custom-srb-fill-btn');
+    const mapHeaderTitle = document.getElementById('map-header-title');
     const bgMzSearch = document.getElementById('bg-mz-search');
     const bgMzFilters = document.getElementById('bg-mz-filters');
     const bgMzList = document.getElementById('bg-mz-list');
     const bgMzCount = document.getElementById('bg-mz-count');
     const bgMzLegend = document.getElementById('bg-mz-legend');
     const resetMapViewBtn = document.getElementById('reset-map-view-btn');
+
+    let dodatakRegion = 'beograd';
     let selectedMunicipality = 'Sve';
 
+    function getActiveMzDataset() {
+      return dodatakRegion === 'beograd' ? belgradeMZs : serbiaMZs;
+    }
+
     // Inicijalizacija standardne OpenStreetMap mape
-    const DEFAULT_CENTER = [44.805, 20.455];
-    const DEFAULT_ZOOM = 11;
+    const BG_CENTER = [44.805, 20.455];
+    const BG_ZOOM = 11;
+    const SRB_CENTER = [44.15, 20.80];
+    const SRB_ZOOM = 7;
+
     let bgMap = null;
     let markerLayerGroup = null;
     const markerRegistry = new Map();
 
     if (typeof L !== 'undefined' && document.getElementById('bg-mz-map')) {
       bgMap = L.map('bg-mz-map', {
-        center: DEFAULT_CENTER,
-        zoom: DEFAULT_ZOOM,
+        center: BG_CENTER,
+        zoom: BG_ZOOM,
         scrollWheelZoom: false
       });
 
@@ -1409,14 +1526,26 @@ E-mail adresa: ___________________________`
       markerLayerGroup = L.layerGroup().addTo(bgMap);
 
       resetMapViewBtn.addEventListener('click', () => {
-        bgMap.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+        if (dodatakRegion === 'beograd') {
+          bgMap.setView(BG_CENTER, BG_ZOOM);
+        } else {
+          bgMap.setView(SRB_CENTER, SRB_ZOOM);
+        }
       });
     }
 
     // Globalna funkcija za dugme unutar Leaflet popup-a
     window.fillMzTemplateFromMap = function(mzName, opstinaShort, mzAddress) {
-      inpMz.value = `MZ ${mzName}`;
-      inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+      if (dodatakRegion === 'srbija') {
+        const cleanCity = mzName.replace(/^Grad\s+/i, '');
+        inpOpstina.value = cleanCity;
+        inpMz.value = '';
+        inpMz.focus();
+      } else {
+        const cleanName = mzName.replace(/^MZ\s+/i, '');
+        inpMz.value = `MZ ${cleanName}`;
+        inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+      }
       generateDocText();
       const templateBox = document.getElementById('template-selector');
       if (templateBox) {
@@ -1424,9 +1553,68 @@ E-mail adresa: ___________________________`
       }
     };
 
+    customSrbFillBtn.addEventListener('click', () => {
+      const cityVal = customSrbCity.value.trim();
+      const mzVal = customSrbMz.value.trim();
+      if (cityVal) inpOpstina.value = cityVal;
+      if (mzVal) {
+        inpMz.value = /^MZ\s+/i.test(mzVal) ? mzVal : `MZ ${mzVal}`;
+      }
+      generateDocText();
+      const templateBox = document.getElementById('template-selector');
+      if (templateBox) {
+        templateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    function setDodatakRegion(region) {
+      dodatakRegion = region;
+      selectedMunicipality = 'Sve';
+      bgMzSearch.value = '';
+
+      if (region === 'beograd') {
+        btnDodatakBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white cursor-pointer';
+        btnDodatakSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900 cursor-pointer';
+        dodatakRegionDesc.textContent = 'Pregled svih 121 mesnih zajednica u 8 gradskih opština Beograda.';
+        bgMzSearch.placeholder = 'Pretraži po imenu MZ, opštini ili ulici (npr. Studentski grad, Narodnih heroja, Cerak...)';
+        mapHeaderTitle.textContent = 'OpenStreetMap prikaz mesnih zajednica po gradskim opštinama Beograda';
+        resetMapViewBtn.textContent = 'Prikaži ceo Beograd';
+        customSerbiaMzBox.classList.add('hidden');
+        dodatakRegionNote.innerHTML = '<strong class="text-forest-900">Napomena o adresama:</strong> Prikazane adrese sedišta mesnih zajednica prikupljene su iz javno dostupnih opštinskih imenika i evidencija. Pre slanja zvanične pošte preporučujemo da proveriš aktuelnu adresu i radno vreme pisarnice na zvaničnoj internet prezentaciji svoje gradske opštine.';
+      } else {
+        btnDodatakSrbija.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition bg-forest-900 text-white cursor-pointer';
+        btnDodatakBeograd.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition text-stone-700 hover:text-forest-900 cursor-pointer';
+        dodatakRegionDesc.textContent = 'U Srbiji postoji preko 4.000 mesnih zajednica u više od 145 gradova i opština. Ovde su prikazani svi zakonski gradovi u Srbiji van Beograda (28 gradova) po regionima.';
+        bgMzSearch.placeholder = 'Pretraži po gradu ili primeru MZ (npr. Novi Sad, Valjevo, Pirot, Subotica, Čačak, Vranje...)';
+        mapHeaderTitle.textContent = 'OpenStreetMap prikaz svih 28 zakonskih gradova u Srbiji van Beograda';
+        resetMapViewBtn.textContent = 'Prikaži celu Srbiju';
+        customSerbiaMzBox.classList.remove('hidden');
+        dodatakRegionNote.innerHTML = '<strong class="text-forest-900">Kako do kompletnog spiska u tvom gradu ili opštini:</strong> Pored 28 gradova prikazanih na mapi, Srbija ima i preko 115 opština — svaka jedinica lokalne samouprave objavljuje spisak svojih mesnih zajednica, adrese i odluke o neposrednim izborima na svom zvaničnom sajtu (odeljak <em>Mesne zajednice</em> ili <em>Lokalna samouprava</em>).';
+      }
+
+      renderBgMzLegend();
+      renderBgMzFilters();
+      renderBgMzList(true);
+
+      if (bgMap) {
+        setTimeout(() => {
+          bgMap.invalidateSize();
+          if (region === 'beograd') {
+            bgMap.setView(BG_CENTER, BG_ZOOM);
+          } else {
+            bgMap.setView(SRB_CENTER, SRB_ZOOM);
+          }
+        }, 60);
+      }
+    }
+
+    btnDodatakBeograd.addEventListener('click', () => setDodatakRegion('beograd'));
+    btnDodatakSrbija.addEventListener('click', () => setDodatakRegion('srbija'));
+
     function renderBgMzLegend() {
       if (!bgMzLegend) return;
-      bgMzLegend.innerHTML = belgradeMZs.map(g => `
+      const dataset = getActiveMzDataset();
+      bgMzLegend.innerHTML = dataset.map(g => `
         <span class="inline-flex items-center gap-1.5">
           <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${g.color}"></span>
           <span>${g.short}</span>
@@ -1435,7 +1623,8 @@ E-mail adresa: ___________________________`
     }
 
     function renderBgMzFilters() {
-      const filterNames = ['Sve', ...belgradeMZs.map(m => m.short)];
+      const dataset = getActiveMzDataset();
+      const filterNames = ['Sve', ...dataset.map(m => m.short)];
       bgMzFilters.innerHTML = filterNames.map(name => {
         const active = selectedMunicipality === name;
         return `
@@ -1463,6 +1652,7 @@ E-mail adresa: ___________________________`
     }
 
     function renderBgMzList(fitMapBounds = false) {
+      const dataset = getActiveMzDataset();
       const query = bgMzSearch.value.trim().toLowerCase();
       let totalVisible = 0;
       const visibleBounds = [];
@@ -1472,10 +1662,10 @@ E-mail adresa: ___________________________`
       }
       markerRegistry.clear();
 
-      const cardsHtml = belgradeMZs
+      const cardsHtml = dataset
         .filter(group => selectedMunicipality === 'Sve' || group.short === selectedMunicipality)
         .map(group => {
-          const munMatches = group.municipality.toLowerCase().includes(query);
+          const munMatches = group.municipality.toLowerCase().includes(query) || group.short.toLowerCase().includes(query);
           const filteredItems = query && !munMatches
             ? group.items.filter(item =>
                 item.name.toLowerCase().includes(query) ||
@@ -1499,26 +1689,30 @@ E-mail adresa: ___________________________`
                 fillOpacity: 0.92
               });
 
+              const displayMzTitle = (/^MZ\s+/i.test(mzObj.name) || /^Grad\s+/i.test(mzObj.name)) ? mzObj.name : `MZ „${mzObj.name}“`;
               const safeMz = mzObj.name.replace(/'/g, "\\'");
               const safeMun = group.short.replace(/'/g, "\\'");
               const safeAddr = (mzObj.address || '').replace(/'/g, "\\'");
+              const btnLabel = dodatakRegion === 'srbija'
+                ? 'Izaberi ovaj grad za dopis &rarr;'
+                : 'Popuni dopis za ovu MZ &rarr;';
               marker.bindPopup(`
-                <div style="min-width: 190px;">
+                <div style="min-width: 205px;">
                   <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #526058;">
                     ${group.municipality}
                   </div>
                   <div style="font-family: 'Newsreader', Georgia, serif; font-size: 16px; font-weight: 700; color: #163A2C; margin: 2px 0 3px;">
-                    MZ „${mzObj.name}“
+                    ${displayMzTitle}
                   </div>
                   <div style="font-size: 11px; color: #526058; margin-bottom: 8px;">
-                    Adresa: <strong style="color: #1A241E;">${mzObj.address}</strong>
+                    ${dodatakRegion === 'srbija' ? 'Pregled:' : 'Adresa:'} <strong style="color: #1A241E;">${mzObj.address}</strong>
                   </div>
                   <button
                     type="button"
                     onclick="fillMzTemplateFromMap('${safeMz}', '${safeMun}', '${safeAddr}')"
                     style="width: 100%; padding: 6px 10px; border-radius: 8px; background: #163A2C; color: #FFFFFF; font-size: 11px; font-weight: 600; border: none; cursor: pointer;"
                   >
-                    Ubaci u šablon dopisa &rarr;
+                    ${btnLabel}
                   </button>
                 </div>
               `);
@@ -1534,7 +1728,7 @@ E-mail adresa: ___________________________`
               data-mz="${mzObj.name}"
               data-opstina="${group.short}"
               data-address="${mzObj.address}"
-              title="Prikaži MZ „${mzObj.name}“ (${mzObj.address}) na mapi i ubaci u generator dopisa"
+              title="Prikaži ${mzObj.name} (${mzObj.address}) na mapi i popuni dopis"
               class="mz-pick-btn inline-flex items-baseline gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-paper border border-forest-100 text-forest-900 hover:bg-terracotta-50 hover:border-terracotta-500 hover:text-terracotta-600 transition cursor-pointer text-left"
             >
               <span class="w-1.5 h-1.5 rounded-full shrink-0 self-center" style="background-color: ${group.color}"></span>
@@ -1553,7 +1747,7 @@ E-mail adresa: ___________________________`
                     <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${group.color}"></span>
                     <h3 class="font-serif font-bold text-xl text-forest-900">${group.municipality}</h3>
                   </div>
-                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-forest-50 text-forest-700">${filteredItems.length} MZ</span>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-forest-50 text-forest-700">${filteredItems.length} ${dodatakRegion === 'srbija' ? 'gradova' : 'MZ'}</span>
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                   ${chips}
@@ -1567,18 +1761,24 @@ E-mail adresa: ___________________________`
 
       if (bgMap && fitMapBounds && visibleBounds.length > 0) {
         if (selectedMunicipality === 'Sve' && !query) {
-          bgMap.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+          if (dodatakRegion === 'beograd') {
+            bgMap.setView(BG_CENTER, BG_ZOOM);
+          } else {
+            bgMap.setView(SRB_CENTER, SRB_ZOOM);
+          }
         } else if (visibleBounds.length === 1) {
-          bgMap.setView(visibleBounds[0], 14);
+          bgMap.setView(visibleBounds[0], dodatakRegion === 'srbija' ? 11 : 14);
         } else {
-          bgMap.fitBounds(visibleBounds, { padding: [32, 32], maxZoom: 14 });
+          bgMap.fitBounds(visibleBounds, { padding: [32, 32], maxZoom: dodatakRegion === 'srbija' ? 10 : 14 });
         }
       }
 
-      bgMzCount.textContent = `Prikazano: ${totalVisible} MZ`;
+      bgMzCount.textContent = dodatakRegion === 'srbija'
+        ? `Prikazano: ${totalVisible} gradova (4.000+ MZ)`
+        : `Prikazano: ${totalVisible} MZ`;
       bgMzList.innerHTML = cardsHtml || `
         <div class="sm:col-span-2 bg-white border border-forest-100 rounded-2xl p-6 text-center text-sm text-muted">
-          Nema pronađenih mesnih zajednica za zadati pojam pretrage.
+          Nema pronađenih rezultata za zadati pojam pretrage.
         </div>
       `;
 
@@ -1587,8 +1787,17 @@ E-mail adresa: ___________________________`
           const mzName = btn.dataset.mz;
           const opstinaShort = btn.dataset.opstina;
           const mzAddress = btn.dataset.address;
-          inpMz.value = `MZ ${mzName}`;
-          inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+
+          if (dodatakRegion === 'srbija') {
+            const cleanCity = mzName.replace(/^Grad\s+/i, '');
+            customSrbCity.value = cleanCity;
+            inpOpstina.value = cleanCity;
+            inpMz.value = '';
+          } else {
+            const cleanName = mzName.replace(/^MZ\s+/i, '');
+            inpMz.value = `MZ ${cleanName}`;
+            inpOpstina.value = mzAddress ? `${opstinaShort} (${mzAddress})` : opstinaShort;
+          }
           generateDocText();
 
           const marker = markerRegistry.get(`${opstinaShort}::${mzName}`);
@@ -1597,7 +1806,7 @@ E-mail adresa: ___________________________`
             if (mapEl) {
               mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-            bgMap.setView(marker.getLatLng(), 15);
+            bgMap.setView(marker.getLatLng(), dodatakRegion === 'srbija' ? 11 : 14);
             marker.openPopup();
           }
         });
